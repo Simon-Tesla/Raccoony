@@ -1,0 +1,12 @@
+{
+  "title": "Raccoony",
+  "name": "raccoony",
+  "version": "0.0.1",
+  "description": "Adds shiny new features (like automatic downloading) to art sites.",
+  "main": "index.js",
+  "author": "NatePri",
+  "engines": {
+    "firefox": ">=38.0a1"
+  },
+  "license": "MIT"
+}
