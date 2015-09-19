@@ -8,5 +8,12 @@
   "engines": {
     "firefox": ">=38.0a1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  
+  "preferences": [{
+		"name": "downloadFolder",
+		"title": "Download Folder",
+		"description": "The folder where Raccoony will download art",
+		"type": "directory"
+	}]
 }
