@@ -29,7 +29,7 @@ var button = buttons.ActionButton({
 
 pageMod.PageMod({
   include: "https://www.weasyl.com/submission/*",
-  contentScriptFile: "./weasylDownload.js",
+  contentScriptFile: ["./weasylDownload.js", "./common.js"],
   onAttach: onPageLoad
 })
 
@@ -66,6 +66,15 @@ function onPageLoad(worker) {
     }
   }
   
+  function showError(msg) {
+    // Show the error state in the toolbar button and optionally a message.
+    if (msg) {
+      showNotification(msg);
+    }
+    button.badge = "\u2716"; // multiplication x
+    button.badgeColor = "#ff0000";
+  }
+  
   function getDownloadRoot() {
     return prefs.downloadFolder; 
     //return OS.Path.join(OS.Constants.Path.homeDir, "temp"); 
@@ -92,7 +101,10 @@ function onPageLoad(worker) {
   
   function handleCheckIfDownloaded(info) {
     var paths = normalizePaths(info);
-    if (!paths) return;
+    if (!paths) {
+      showError(false);
+      return;
+    }
     OS.File.exists(paths.targetPath).then(function (fileExists) {
       updateDownloadedState(fileExists);
     });
@@ -121,10 +133,13 @@ function onPageLoad(worker) {
   function handleGotDownload(info) {
     // Handler for the gotDownload message
     
-    if (!validateSubmissionMetadata(info)) return false;
+    if (!validateSubmissionMetadata(info)) {
+      showError();
+      return false;
+    }
     var paths = normalizePaths(info);
     if (!paths) {
-      showNotification("TODO: downloadFolder not configured");
+      showError("The download folder has not been configured.");
       return false;
     }
     
@@ -142,9 +157,7 @@ function onPageLoad(worker) {
         updateDownloadedState(true);
         showNotification("Finished downloading " + info.filename);
       }, function (error) {
-        showNotification("Error: " + error);
-        button.badge = "\u2716"; // multiplication x
-        button.badgeColor = "#ff0000";
+        showError("Error: " + error);
       });
       
     function rejectIfFileExists() {
@@ -180,11 +193,6 @@ function onPageLoad(worker) {
   }
     
   button.on("click", function (state) { 
-    if (!getDownloadRoot())
-    {
-      //TODO can we take them to the page to set the options?
-      showNotification("Download root not configured.")
-    }
     if (!downloaded) {
       worker.port.emit("getDownload");
     }
