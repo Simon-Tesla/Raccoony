@@ -1,8 +1,10 @@
 var {Cu, Cc, Ci} = require("chrome");
 var Downloads = Cu.import("resource://gre/modules/Downloads.jsm").Downloads;
 var OS = Cu.import("resource://gre/modules/osfile.jsm").OS;	
+// TODO: convert to using PromiseUtils.jsm or core/promises
 var Promise = Cu.import("resource://gre/modules/Promise.jsm").Promise;
 var Task = Cu.import("resource://gre/modules/Task.jsm").Task;
+var FileUtils = Cu.import("resource://gre/modules/FileUtils.jsm").FileUtils;
 var notifications = require("sdk/notifications");
 var self = require('sdk/self');
 var buttons = require('sdk/ui/button/action');
@@ -15,7 +17,7 @@ var data = self.data;
 
 var button = buttons.ActionButton({
   id: "raccoony-link",
-  label: "Save Image",
+  label: "Save this!",
   icon: {
     "16": "./icon-16.png",
     "32": "./icon-32.png",
@@ -30,12 +32,14 @@ var button = buttons.ActionButton({
 pageMod.PageMod({
   include: "https://www.weasyl.com/submission/*",
   contentScriptFile: ["./weasylDownload.js", "./common.js"],
+  contentStyleFile: "./pageUi.css",
   onAttach: onPageLoad
 })
 
 function onPageLoad(worker) {
   // PageMod handler
   var downloaded = false;
+  worker.port.emit("injectUi");
   worker.port.on("gotDownload", handleGotDownload);
   worker.port.on("checkIfDownloaded", handleCheckIfDownloaded)
   
@@ -69,7 +73,7 @@ function onPageLoad(worker) {
   function showError(msg) {
     // Show the error state in the toolbar button and optionally a message.
     if (msg) {
-      showNotification(msg);
+      showNotification(msg, {error: true});
     }
     button.badge = "\u2716"; // multiplication x
     button.badgeColor = "#ff0000";
@@ -156,8 +160,10 @@ function onPageLoad(worker) {
       .then(function () {
         updateDownloadedState(true);
         showNotification("Finished downloading " + info.filename);
+        worker.port.emit("downloadComplete");
       }, function (error) {
         showError("Error: " + error);
+        worker.port.emit("downloadError", error);
       });
       
     function rejectIfFileExists() {
@@ -169,17 +175,23 @@ function onPageLoad(worker) {
           } else {
             resume();
           }
-        });
+        }, abort);
       });
     }
     
     function downloadFile() {
       // Downloads the file.
       return Task.spawn(function () {
+        worker.port.emit("downloadStart");
         var download = yield Downloads.createDownload({
           source: sourceUrl,
           target: targetPath
         });
+        
+        download.onchange = function () {
+          console.log("Downloaded " + download.progress + "%");
+          worker.port.emit("downloadProgress", download.progress);
+        }
         
         yield download.start();
       })
@@ -191,10 +203,34 @@ function onPageLoad(worker) {
     // Important: path must be sanitized before passing to this method.
     return OS.File.makeDir(targetDir, { ignoreExisting: true });
   }
-    
+  
+  worker.port.on("showFolder", showFolderInExplorer);
+  
+  function showFolderInExplorer(info) {
+    // TODO: FileUtils is a deprecated API, is there a replacement?
+    var paths = normalizePaths(info);
+    var file = new FileUtils.File(paths.targetPath || paths.targetDir);
+    if (file.exists()) {
+      file.reveal();
+    }
+  }
+  
+  function showNotification(msg, context) {
+    // Shows a popup notification.
+    // TODO: should probably change this to use a panel instead of desktop notifications.
+    notifications.notify({
+      title: "Raccoony",
+      text: msg,
+      iconUrl: "./icon-32.png"
+    }); 
+    worker.port.emit("notification", msg, context);
+  }
+  
   button.on("click", function (state) { 
     if (!downloaded) {
       worker.port.emit("getDownload");
+    } else {
+      worker.port.emit("beginShowFolder");
     }
   })
 }
@@ -259,13 +295,3 @@ function merge(depth, target, source) {
   
   return target;
 };
-
-function showNotification(msg) {
-  // Shows a popup notification.
-  // TODO: should probably change this to use a panel instead of desktop notifications.
-  notifications.notify({
-    title: "Raccoony",
-    text: msg,
-    iconUrl: "./icon-32.png"
-  }); 
-}
