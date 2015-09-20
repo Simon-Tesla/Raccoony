@@ -2,7 +2,7 @@
 	position: fixed;
 	left: 0;
 	bottom: 0;
-	transition: opacity 200ms;
+	transition: opacity .4s;
 	opacity: .25;
 	padding: .25em;
 	z-index: 10000;
@@ -27,19 +27,49 @@
 
 #raccoony-ui .raccoony-hide,
 #raccoony-ui.raccoony-hide {
-	animation: raccoony-fadeout-anim .5s;
 	display: none;
 }
 
 #raccoony-ui .raccoony-begin-hide,
 #raccoony-ui.raccoony-begin-hide {
-	animation: raccoony-fadeout-anim .5s;
+	animation: raccoony-fadeout-anim .3s;
 }
 
 #raccoony-ui .raccoony-show,
 #raccoony-ui.raccoony-show {
-	animation: raccoony-fadein-anim .5s;
+	animation: raccoony-fadein-anim .3s;
 	display: block;
+}
+
+#raccoony-ui #raccoony-close {
+	position: absolute;
+	display: block;
+	left: 0;
+	bottom: 44px;
+	color: #fff;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	border: 2px solid #fff;
+	border-radius: 10px;
+	text-align: center;
+	font-size: 10px;
+	text-decoration: none;
+	background-color: transparent;
+	margin: 0;
+	padding: 0;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity .4s;
+	background-color: rgba(0, 0, 0, .5);
+}
+#raccoony-ui:hover #raccoony-close {
+	opacity: .5;
+}
+
+#raccoony-ui #raccoony-close:hover {
+	opacity: 1;
 }
 
 #raccoony-ctr, 
