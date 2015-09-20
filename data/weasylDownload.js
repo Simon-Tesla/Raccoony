@@ -1,61 +1,35 @@
-var downloadButton = null;
-var downloadUrl = "";
-
-function getDownloadButton() {
-	//Get the span
+function getSubmissionMetadata() {
+	// Get the download button
 	var buttonSpan = document.querySelector("#detail-actions .icon-arrowDown");
-	return buttonSpan.parentElement;
-}
-
-function getDownloadUrl() {
-	var button = getDownloadButton();
-	return button.getAttribute("href");
-}
-
-function getUserName(url) {
+	var button = buttonSpan.parentElement;
+	
+	// Get the URL
+	var url = button.getAttribute("href");
+	var urlObj = new URL(url);
+	
+	// Get the filename
+	var filename = urlObj.pathname.split('/').pop();
+	
+	// Get the username
 	// Weasyl download URLs are of the format 
 	// https://cdn.weasyl.com/~user/submissions/##/####/user-filename.jpg?download
-	
-	var pathParts = url.pathname.split('/'); // "/~user/..."
+	var pathParts = urlObj.pathname.split('/'); // "/~user/..."
 	var username = pathParts[1] || "";
-	return username.replace("~", "");
-}
-
-function getFileName(url) {
-	return url.pathname.split('/').pop();
-}
-
-function getSubmissionMetadata()
-{
-	var url = getDownloadUrl();
-	var urlObj = new URL(url);
+	username = username.replace("~", "");
 	
 	return {
 		url: url,
-		user: getUserName(urlObj),
-		filename: getFileName(urlObj),
+		user: username,
+		filename: filename,
 		service: "weasyl"
 	}
 }
 
-self.port.emit("checkIfDownloaded", getSubmissionMetadata());
+function getMetadataResponderFn(emitEventName) {
+	return function () {
+		self.port.emit(emitEventName, getSubmissionMetadata());
+	}
+}
 
-self.port.on("getDownload", function() {
-	var info = getSubmissionMetadata();
-	if (!info.url) {
-		console.error("Download URL not found.");
-		return false;	
-	}
-	if (!info.user)
-	{
-		console.error("Username not found.");
-		return false;
-	}
-	if (!info.filename)
-	{
-		console.error("Filename not found.");
-		return false;
-	}
-	
-	self.port.emit("gotDownload", info);
-});
+self.port.on("beginCheckIfDownloaded", getMetadataResponderFn("checkIfDownloaded"))
+self.port.on("getDownload", getMetadataResponderFn("gotDownload"));

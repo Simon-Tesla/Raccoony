@@ -13,13 +13,6 @@ var tabs = require("sdk/tabs");
 
 var data = self.data;
 
-//var load_weasylDownload = data.url("weasylDownload.js");
-var pageMod = pageMod.PageMod({
-  include: "https://www.weasyl.com/submission/*",
-  contentScriptFile: "./weasylDownload.js",
-  onAttach: onPageLoad
-})
-
 var button = buttons.ActionButton({
   id: "raccoony-link",
   label: "Save Image",
@@ -31,34 +24,54 @@ var button = buttons.ActionButton({
   disabled: true
 });
 
-tabs.on("open", onTabOpen);
+/////////////////////////
+// Page Mod declarations
 
-function onTabOpen(tab) {
-  // Attach tab event handlers.
-  tab.on("activate", onTabActivate);
-}
-
-function onTabActivate() {
-  //TODO: figure out why this doesn't work. :P
-  button.disabled = true;
-}
-
+pageMod.PageMod({
+  include: "https://www.weasyl.com/submission/*",
+  contentScriptFile: "./weasylDownload.js",
+  onAttach: onPageLoad
+})
 
 function onPageLoad(worker) {
   // PageMod handler
+  var downloaded = false;
   worker.port.on("gotDownload", handleGotDownload);
   worker.port.on("checkIfDownloaded", handleCheckIfDownloaded)
-  worker.tab.on("activate", function () {
+  
+  worker.tab.on("activate", enableButton);
+  worker.tab.on("deactivate", function () {
+    // Disable the button whenever we switch away from this tab.
+    button.badge = null;
+    button.disabled = true;
+  })
+  if (worker.tab === tabs.activeTab) {
+    enableButton();
+  }
+  
+  function enableButton() {
+    // Enable the button if we're on a supported page.
     button.disabled = false;
-  });
-  button.disabled = false;
+    worker.port.emit("beginCheckIfDownloaded");
+  }
+  
+  function updateDownloadedState(isDownloaded) {
+    downloaded = isDownloaded;
+    if (isDownloaded) {
+      button.badge = "\u2713"; // check mark
+      button.badgeColor = "#666666";
+    } else {
+      button.badge = "\u25BC"; // downward triangle
+      button.badgeColor = "#009900";
+    }
+  }
   
   function getDownloadRoot() {
     return prefs.downloadFolder; 
     //return OS.Path.join(OS.Constants.Path.homeDir, "temp"); 
   }
   
-  function normalizePaths(dl) {
+  function normalizePaths(info) {
     // Get normalized paths from the submission metadata
     var downloadRoot = getDownloadRoot();
     if (!downloadRoot) {
@@ -66,9 +79,9 @@ function onPageLoad(worker) {
     }
     var serviceDir = OS.Path.normalize(OS.Path.join(
       downloadRoot, 
-      sanitizeFilename(dl.service)));
-    var targetDir = OS.Path.join(serviceDir, sanitizeFilename(dl.user));
-    var targetPath = OS.Path.join(targetDir, sanitizeFilename(dl.filename));
+      sanitizeFilename(info.service)));
+    var targetDir = OS.Path.join(serviceDir, sanitizeFilename(info.user));
+    var targetPath = OS.Path.join(targetDir, sanitizeFilename(info.filename));
     return {
       downloadRoot: downloadRoot,
       serviceDir: serviceDir,
@@ -77,31 +90,63 @@ function onPageLoad(worker) {
     }
   }
   
-  function handleCheckIfDownloaded(dl)  {
-    var paths = normalizePaths(dl);
+  function handleCheckIfDownloaded(info) {
+    var paths = normalizePaths(info);
     if (!paths) return;
     OS.File.exists(paths.targetPath).then(function (fileExists) {
-      if (fileExists) { 
-        button.badge = "D";
-      } else {
-        button.badge = null;
-      }
+      updateDownloadedState(fileExists);
     });
   }
   
-  function handleGotDownload(dl) {
+  function validateSubmissionMetadata(info) {
+    if (!info.url) {
+      console.error("Download URL not found.");
+      return false;	
+    }
+    if (!info.user)	{
+      console.error("Username not found.");
+      return false;
+    }
+    if (!info.filename)	{
+      console.error("Filename not found.");
+      return false;
+    }
+    if (!info.service) {
+      console.error("Service not found.");
+      return false;
+    }
+    return true;
+  }
+  
+  function handleGotDownload(info) {
     // Handler for the gotDownload message
-    var paths = normalizePaths(dl);
+    
+    if (!validateSubmissionMetadata(info)) return false;
+    var paths = normalizePaths(info);
     if (!paths) {
       showNotification("TODO: downloadFolder not configured");
       return false;
     }
     
-    var sourceUrl = dl.url;
+    var sourceUrl = info.url;
     var serviceDir = paths.serviceDir;
     var targetDir = paths.targetDir;
     var targetPath = paths.targetPath;
-
+    
+    // Start the download process.
+    createTargetFolder(serviceDir)
+      .then(function () { return createTargetFolder(targetDir); })
+      .then(rejectIfFileExists)
+      .then(downloadFile)
+      .then(function () {
+        updateDownloadedState(true);
+        showNotification("Finished downloading " + info.filename);
+      }, function (error) {
+        showNotification("Error: " + error);
+        button.badge = "\u2716"; // multiplication x
+        button.badgeColor = "#ff0000";
+      });
+      
     function rejectIfFileExists() {
       // Returns a promise that rejects if the file exists.
       return new Promise(function (resume, abort) {
@@ -126,18 +171,6 @@ function onPageLoad(worker) {
         yield download.start();
       })
     }
-    
-    // Start the download process.
-    createTargetFolder(serviceDir)
-      .then(function () { return createTargetFolder(targetDir) })
-      .then(rejectIfFileExists)
-      .then(downloadFile)
-      .then(function () {
-        button.badge = "D";
-        showNotification("Finished downloading " + dl.filename);
-      }, function (error) {
-        showNotification("Error: " + error);
-      });
   }
   
   function createTargetFolder(targetDir) {
@@ -152,7 +185,7 @@ function onPageLoad(worker) {
       //TODO can we take them to the page to set the options?
       showNotification("Download root not configured.")
     }
-    if (state.badge != "D") {
+    if (!downloaded) {
       worker.port.emit("getDownload");
     }
   })
@@ -220,7 +253,8 @@ function merge(depth, target, source) {
 };
 
 function showNotification(msg) {
-  // Shows a popup notification with a timeout.
+  // Shows a popup notification.
+  // TODO: should probably change this to use a panel instead of desktop notifications.
   notifications.notify({
     title: "Raccoony",
     text: msg,
