@@ -17,9 +17,11 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 		mainUi.id = "raccoony-ui";
 		mainUi.innerHTML = 
 			'<img src="'+_logoImg+'" id="raccoony-img"/>' +
-			'<div id="raccoony-notify">'+
-				'<div id="raccoony-message">Download in progress...</div>'+
-				'<progress value="0" max="100" id="raccoony-dl-progress"  />'+
+			'<div id="raccoony-ctr">' +
+				'<div id="raccoony-notify" class="raccoony-bubble raccoony-hide">'+
+					'<div id="raccoony-message">Download in progress...</div>' +
+					'<progress value="0" max="100" id="raccoony-dl-progress" />'+
+				'</div>' +
 			'</div>';
 		document.body.appendChild(mainUi);
 		_ui.progress = document.getElementById("raccoony-dl-progress");
@@ -27,16 +29,32 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 		_ui.logo = document.getElementById("raccoony-img");
 		
 		_ui.logo.addEventListener("click", function (ev) {
-			hideElt(mainUi);
+			var notify = document.getElementById("raccoony-notify");
+			if (!notify.classList.contains("raccoony-show")) {
+				showElt(notify);
+			} else {
+				hideElt(notify);
+			}
 		});
 	}
 	
 	function showElt(el) {
+		el.classList.remove("raccoony-begin-hide");
 		el.classList.remove("raccoony-hide");
+		el.classList.add("raccoony-show");
 	}
 	
 	function hideElt(el) {
-		el.classList.add("raccoony-hide");
+		var listener = function () {
+			// Adding a class with display: none immediately hides the element.
+			// We get around this by waiting for the animation to complete before adding that class.
+			el.classList.add("raccoony-hide");
+			el.classList.remove("raccoony-begin-hide");
+			el.removeEventListener("animationend", listener);
+		};
+		el.addEventListener("animationend", listener)
+		el.classList.add("raccoony-begin-hide");
+		el.classList.remove("raccoony-show");
 	}
 	
 	function hideProgress() {
