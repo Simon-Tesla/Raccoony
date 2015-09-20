@@ -25,30 +25,37 @@ function getFileName(url) {
 	return url.pathname.split('/').pop();
 }
 
-self.port.on("getDownload", function() {
+function getSubmissionMetadata()
+{
 	var url = getDownloadUrl();
-	if (!url) {
+	var urlObj = new URL(url);
+	
+	return {
+		url: url,
+		user: getUserName(urlObj),
+		filename: getFileName(urlObj),
+		service: "weasyl"
+	}
+}
+
+self.port.emit("checkIfDownloaded", getSubmissionMetadata());
+
+self.port.on("getDownload", function() {
+	var info = getSubmissionMetadata();
+	if (!info.url) {
 		console.error("Download URL not found.");
 		return false;	
 	}
-	var urlObj = new URL(url);
-	var username = getUserName(urlObj);
-	var filename = getFileName(urlObj);
-	if (!username)
+	if (!info.user)
 	{
 		console.error("Username not found.");
 		return false;
 	}
-	if (!filename)
+	if (!info.filename)
 	{
 		console.error("Filename not found.");
 		return false;
 	}
 	
-	self.port.emit("gotDownload", {
-		url: url,
-		user: username,
-		filename: filename,
-		service: "weasyl"
-	});
+	self.port.emit("gotDownload", info);
 });
