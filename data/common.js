@@ -10,6 +10,7 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 
 (function () {
 	var _ui = {};
+	var _isDownloaded = false;
 	function _n(name) {
 		return "raccoony-" + name;
 	}
@@ -24,7 +25,7 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 		var mainUi = _ui.main = document.createElement("DIV");
 		mainUi.id = _n("ui");
 		mainUi.innerHTML = 
-			'<a id="'+_n("close")+'">&#x2716;</a>'+
+			'<a href="#" id="'+_n("close")+'">&#x2716;</a>'+
 			'<img src="'+_logoImg+'" id="'+_n("img")+'"/>' +
 			'<div id="'+_n("ctr")+'">' +
 				'<div id="'+_n("notify")+'" class="'+_n("bubble")+' '+_n("hide")+'">'+
@@ -32,7 +33,11 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 					'<progress value="0" max="100" id="'+_n("dl-progress")+'" class="'+_n("nodisplay")+'" />'+
 				'</div>' +
 				'<div id="'+_n("tools")+'" class="'+_n("bubble")+' '+_n("hide")+'">'+
-					'Stuff goes here'+
+					'<div class="'+_n("nodownload")+'"><div class="rc-icon">&#x26A0;</div> The download folder for Raccoony is not set up! Please go to the add-on settings in <a href="about:addons">Add-ons</a> &gt; Extensions, and click the Options button to set it up.</div>'+
+					'<div class="'+_n("reqdownload")+'">'+
+						'<button id="'+_n("download")+'" class="'+_n("action")+'"><span>&#x25BC;</span> Download</button><br />'+
+						'<button id="'+_n("open-folder")+'" class="'+_n("action")+'"><span>&#x1f4c2;</span> Open folder</button> '+
+					'</div>'+
 				'</div>' +
 			'</div>';
 		document.body.appendChild(mainUi);
@@ -45,15 +50,115 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 		
 		_ui.close.addEventListener("click", function (ev) {
 			hideElt(mainUi);
+			ev.preventDefault();
 		});
 		
 		_ui.logo.addEventListener("click", function (ev) {
+			getMetadataResponderFn("checkIfDownloaded")();
 			var skipAnim = visibleElt(_ui.notify);
 			hideElt(_ui.notify, true).then(function () {
 				toggleElt(_ui.tools, skipAnim);	
 			})
 		});
+		
+		_el("download").addEventListener("click", function(ev) {
+			if (!_isDownloaded) {
+				getMetadataResponderFn("gotDownload")();
+				hideElt(_ui.tools, true);
+			}
+		});
+		_el("open-folder").addEventListener("click", function(ev) {
+			getMetadataResponderFn("showFolder")();
+			hideElt(_ui.tools);
+		});
+		
+		mainUi.addEventListener("mouseleave", function (ev) {
+			hideElt(_ui.tools);
+		});
+		
+		document.body.addEventListener("click", function (ev) {
+			if (!closest(ev.target, "#"+_n("ui"))) {
+				hideElt(_ui.tools);
+			}
+		});
+		
+		checkIfDownloadRootSet()
+			.then(checkIfDownloaded);
 	}
+	
+	function updateNotificationMessage(msg) {
+		_ui.message.innerHTML = msg;
+	}
+	
+	function hideProgress() {
+		setTimeout(function() {
+			hideElt(_ui.notify).then(function () {
+				_ui.main.classList.remove("active");
+				_ui.progress.classList.add(_n("hide"));
+			});
+		}, 10000);
+	}
+	
+	function showIsDownloaded() {
+		_isDownloaded = true;
+		var dl = _el("download");
+		dl.innerHTML = "&#x2713; File exists";
+		dl.disabled = true;
+	}
+	
+	function checkIfDownloaded() {
+		return new Promise(function (resolve, reject) {
+			var handler = function (isDownloaded) {
+				self.port.removeListener("isDownloaded", handler);
+				if (isDownloaded) {
+					showIsDownloaded();
+				}
+				resolve(isDownloaded);
+			}
+			self.port.on("isDownloaded", handler);
+			getMetadataResponderFn("checkIfDownloaded")();
+		});
+	}
+	
+	function checkIfDownloadRootSet() {
+		return new Promise(function (resolve, reject) {
+			var handler = function (isRootSet) {
+				self.port.removeListener(handler);
+				if (!isRootSet) {
+					_ui.tools.classList.add(_n("need-dl-setup"));
+				} else {
+					_ui.tools.classList.remove(_n("need-dl-setup"));
+				}
+				_el("download").disabled = !isRootSet;
+				_el("open-folder").disabled = !isRootSet;
+				self.port.removeListener("gotDownloadRootSet", handler)
+			}
+			self.port.on("gotDownloadRootSet", handler);
+			self.port.emit("getDownloadRootSet");
+		});
+	}
+	
+	self.port.on("injectUi", injectUi);
+	self.port.on("downloadStart", function () {
+		_ui.progress.classList.remove(_n("hide"));
+		_ui.main.classList.add("active");
+		updateNotificationMessage('Downloading... (<span id="'+_n("percent")+'">0</span>%)');
+		showElt(_ui.notify);
+		_ui.progress.value = 0;
+	});
+	self.port.on("downloadProgress", function (percent) {
+		_el("percent").innerHTML = percent;
+		_ui.progress.value = percent;
+	})
+	self.port.on("downloadComplete", function () {
+		updateNotificationMessage('Download complete.');
+		showIsDownloaded();
+		hideProgress();
+	});
+	self.port.on("downloadError", function (msg) {
+		updateNotificationMessage('Error downloading. ' + msg);
+		hideProgress();
+	});
 	
 	function visibleElt(el) {
 		return !el.classList.contains(_n("hide"));
@@ -108,38 +213,18 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 		})
 	}
 	
-	function updateNotificationMessage(msg) {
-		_ui.message.innerHTML = msg;
+	function closest(el, selector) {
+		// Find the closest parent to the given element that matches the selector.
+		// Returns the element, or null if no element was found.
+		var parent;
+		while (el!==null) {
+			parent = el.parentElement;
+			if (parent !== null && parent.matches(selector)) {
+				return parent;
+			}
+			el = parent;
+		}
+	
+		return null;
 	}
-	
-	function hideProgress() {
-		setTimeout(function() {
-			hideElt(_ui.notify).then(function () {
-				_ui.main.classList.remove("active");
-				_ui.progress.classList.add(_n("hide"));
-			});
-		}, 10000);
-	}
-	
-	self.port.on("injectUi", injectUi);
-	self.port.on("downloadStart", function () {
-		_ui.progress.classList.remove(_n("hide"));
-		_ui.main.classList.add("active");
-		updateNotificationMessage('Downloading... (<span id="'+_n("percent")+'">0</span>%)');
-		showElt(_ui.notify);
-		_ui.progress.value = 0;
-	});
-	self.port.on("downloadProgress", function (percent) {
-		_el("percent").innerHTML = percent;
-		_ui.progress.value = percent;
-	})
-	self.port.on("downloadComplete", function () {
-		updateNotificationMessage('Download complete.');
-		hideProgress();
-	});
-	self.port.on("downloadError", function (msg) {
-		updateNotificationMessage('Error downloading. ' + msg);
-		hideProgress();
-	});
-	
 })();

@@ -6,7 +6,7 @@
 	opacity: .25;
 	padding: .25em;
 	z-index: 10000;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
 	font-size: 14px;
 }
 
@@ -39,6 +39,37 @@
 #raccoony-ui.raccoony-show {
 	animation: raccoony-fadein-anim .3s;
 	display: block;
+}
+
+#raccoony-ui .raccoony-action {
+	display: inline-block;
+	color: #fff;
+	border: 2px solid #0072C6;
+	border-radius: 0;
+	background-color: #0072C6;
+	padding: 4px;
+	box-sizing: border-box;
+	min-width: 150px;
+	margin: 4px;
+	font-weight: bold;
+}
+
+#raccoony-ui .raccoony-action:hover {
+	background-color: #0081e0;
+}
+
+#raccoony-ui .raccoony-action:disabled,
+#raccoony-ui .raccoony-action:hover:disabled {
+	background-color: #ddd;
+	color: #666;
+	border-color: #666;
+}
+
+#raccoony-ui .raccoony-action span {
+	display: inline-block;
+	font-size: 16px;
+	vertical-align: center;
+	margin-left: 4px;
 }
 
 #raccoony-ui #raccoony-close {
@@ -102,6 +133,22 @@
 	
 	/* below styles align the beak */
 	left: -20px;
-	top: 40%;
+	bottom: 15px;
 	border-right: 10px solid #ddd;
+}
+
+.raccoony-nodownload,
+.raccoony-need-dl-setup .raccoony-reqdownload {
+	display: none;
+}
+.raccoony-need-dl-setup .raccoony-nodownload {
+	display: block;
+	margin-right: .5em;
+	color: #600;
+	max-width: 400px;
+}
+.raccoony-nodownload .rc-icon {
+	float: left;
+	font-size: 32px;
+	margin-right: 10px;
 }

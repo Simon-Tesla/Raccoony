@@ -41,7 +41,11 @@ function onPageLoad(worker) {
   var downloaded = false;
   worker.port.emit("injectUi");
   worker.port.on("gotDownload", handleGotDownload);
-  worker.port.on("checkIfDownloaded", handleCheckIfDownloaded)
+  worker.port.on("checkIfDownloaded", handleCheckIfDownloaded);
+  worker.port.on("showFolder", showFolderInExplorerFromInfo);
+  worker.port.on("getDownloadRootSet", function () {
+    worker.port.emit("gotDownloadRootSet", !!getDownloadRoot());
+  })
   
   worker.tab.on("activate", enableButton);
   worker.tab.on("deactivate", function () {
@@ -68,13 +72,11 @@ function onPageLoad(worker) {
       button.badge = "\u25BC"; // downward triangle
       button.badgeColor = "#009900";
     }
+    worker.port.emit("isDownloaded", isDownloaded);
   }
   
-  function showError(msg) {
-    // Show the error state in the toolbar button and optionally a message.
-    if (msg) {
-      showNotification(msg, {error: true});
-    }
+  function showError() {
+    // Show the error state in the toolbar.
     button.badge = "\u2716"; // multiplication x
     button.badgeColor = "#ff0000";
   }
@@ -111,6 +113,8 @@ function onPageLoad(worker) {
     }
     OS.File.exists(paths.targetPath).then(function (fileExists) {
       updateDownloadedState(fileExists);
+    }, function () {
+      updateDownloadedState(false);
     });
   }
   
@@ -139,11 +143,13 @@ function onPageLoad(worker) {
     
     if (!validateSubmissionMetadata(info)) {
       showError();
+      worker.port.emit("downloadError", "Invalid paths.");
       return false;
     }
     var paths = normalizePaths(info);
     if (!paths) {
-      showError("The download folder has not been configured.");
+      showError();
+      worker.port.emit("downloadError", "Download folder not set up.");
       return false;
     }
     
@@ -162,7 +168,7 @@ function onPageLoad(worker) {
         showNotification("Finished downloading " + info.filename);
         worker.port.emit("downloadComplete");
       }, function (error) {
-        showError("Error: " + error);
+        showError();
         worker.port.emit("downloadError", error);
       });
       
@@ -204,16 +210,23 @@ function onPageLoad(worker) {
     return OS.File.makeDir(targetDir, { ignoreExisting: true });
   }
   
-  worker.port.on("showFolder", showFolderInExplorer);
-  
-  function showFolderInExplorer(info) {
+  function showFolderInExplorerFromInfo(info) {
     // TODO: FileUtils is a deprecated API, is there a replacement?
     var paths = normalizePaths(info);
-    var file = new FileUtils.File(paths.targetPath || paths.targetDir);
-    if (file.exists()) {
-      file.reveal();
+    if (!showFolderInExplorer(paths.targetPath)) {
+      showFolderInExplorer(paths.targetDir);
     }
   }
+  
+  function showFolderInExplorer(path) {
+    var file = new FileUtils.File(path);
+    if (file.exists()) {
+      file.reveal();
+      return true;
+    } 
+    return false;
+  }
+  
   
   function showNotification(msg, context) {
     // Shows a popup notification.
