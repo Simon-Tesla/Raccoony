@@ -20,11 +20,11 @@ for it. Just look at [one of the *Download.js files](https://github.com/NatePri/
 to see an example.
 
 ##Download
+THIS IS CURRENTLY VERY PRE-ALPHA SOFTWARE. USE AT YOUR OWN RISK.
+
 Coming soon.
 
 ##Licence
-THIS IS CURRENTLY VERY PRE-ALPHA SOFTWARE. USE AT YOUR OWN RISK.
-
 The MIT License (MIT)
 
 Copyright (c) 2015 NatePri
