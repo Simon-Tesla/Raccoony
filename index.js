@@ -44,11 +44,21 @@ pageMod.PageMod({
 });
 
 pageMod.PageMod({
-  include: "*.deviantart.com", //TODO: use a regex for these.
-  contentScriptFile: ["./deviantArtDownload.js", "./common.js"],
+  include: "https://inkbunny.net/submissionview.php?id=*",
+  contentScriptFile: ["./inkbunnyDownload.js", "./common.js"],
   contentStyleFile: "./pageUi.css",
   onAttach: onPageLoad
 });
+
+if (false) {
+  //TODO: Disabling deviantArt until I can get the URL thing straightened out.
+  pageMod.PageMod({
+    include: "*.deviantart.com", //TODO: use a regex for these.
+    contentScriptFile: ["./deviantArtDownload.js", "./common.js"],
+    contentStyleFile: "./pageUi.css",
+    onAttach: onPageLoad
+  });
+}
 
 function onPageLoad(worker) {
   // PageMod handler
