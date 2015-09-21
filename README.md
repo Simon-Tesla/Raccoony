@@ -22,7 +22,7 @@ to see an example.
 ##Download
 THIS IS CURRENTLY VERY PRE-ALPHA SOFTWARE. USE AT YOUR OWN RISK.
 
-Coming soon.
+[Download @raccoony-0.0.1.xpi](https://github.com/NatePri/Raccoony/blob/d89cf3e8941edf1c8f165d97aa1de8a2db5ab6c1/dist/@raccoony-0.0.1.xpi?raw=true)
 
 ##Licence
 The MIT License (MIT)
