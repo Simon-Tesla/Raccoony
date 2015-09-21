@@ -19,6 +19,10 @@ so if you see one not on the list, feel free to suggest or write your own plugin
 for it. Just look at [one of the *Download.js files](https://github.com/NatePri/Raccoony/blob/master/data/weasylDownload.js) 
 to see an example.
 
+##Download
+Coming soon.
+
+##Licence
 THIS IS CURRENTLY VERY PRE-ALPHA SOFTWARE. USE AT YOUR OWN RISK.
 
 The MIT License (MIT)
