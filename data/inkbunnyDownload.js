@@ -19,7 +19,7 @@ function getSubmissionMetadata() {
 		if (button) {
 			// Get the url off of the button.
 			// https://us.ib.metapix.net/files/full/XX/[ID?]_[username]_[filename].[ext]
-			url = button.getAttribute("href");
+			url = button.href;
 		} else {
 			// Go for the URL of the image itself if it doesn't.
 			// https://us.ib.metapix.net/files/screen/XX/[ID?]_[username]_[filename]-XX.[ext]

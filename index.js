@@ -30,14 +30,14 @@ var button = buttons.ActionButton({
 // Page Mod declarations
 
 pageMod.PageMod({
-  include: ["https://www.weasyl.com/submission/*", "http://www.weasyl.com/submission/*"],
+  include: "https://www.weasyl.com/submission/*",
   contentScriptFile: ["./weasylDownload.js", "./common.js"],
   contentStyleFile: "./pageUi.css",
   onAttach: onPageLoad
 });
 
 pageMod.PageMod({
-  include: ["https://www.sofurry.com/view/*", "http://www.sofurry.com/view/*"],
+  include: "https://www.sofurry.com/view/*",
   contentScriptFile: ["./sofurryDownload.js", "./common.js"],
   contentStyleFile: "./pageUi.css",
   onAttach: onPageLoad
@@ -46,6 +46,13 @@ pageMod.PageMod({
 pageMod.PageMod({
   include: "https://inkbunny.net/submissionview.php?id=*",
   contentScriptFile: ["./inkbunnyDownload.js", "./common.js"],
+  contentStyleFile: "./pageUi.css",
+  onAttach: onPageLoad
+});
+
+pageMod.PageMod({
+  include: ["https://www.furaffinity.net/view/*", "http://www.furaffinity.net/view/*"],
+  contentScriptFile: ["./furaffinityDownload.js", "./common.js"],
   contentStyleFile: "./pageUi.css",
   onAttach: onPageLoad
 });

@@ -8,6 +8,8 @@
 	z-index: 10000;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
 	font-size: 14px;
+	color: #000;
+	background-color: transparent;
 }
 
 #raccoony-ui:hover,
@@ -43,7 +45,7 @@
 
 #raccoony-ui .raccoony-action {
 	display: inline-block;
-	color: #fff;
+	color: #fff !important;
 	border: 2px solid #0072C6;
 	border-radius: 0;
 	background: #0072C6;
@@ -65,7 +67,7 @@
 #raccoony-ui .raccoony-action:disabled,
 #raccoony-ui .raccoony-action:hover:disabled {
 	background-color: #ddd;
-	color: #666;
+	color: #666 !important;
 	border-color: #666;
 }
 
@@ -118,6 +120,7 @@
 }
 
 .raccoony-bubble {
+	color: #000;
 	background-color: #ddd;
 	border-radius: 5px;
 	box-shadow: 5px 5px 5px rgba(0,0,0,.5);
