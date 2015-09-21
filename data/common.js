@@ -1,6 +1,8 @@
 function getMetadataResponderFn(emitEventName) {
 	return function () {
-		self.port.emit(emitEventName, getSubmissionMetadata());
+		getSubmissionMetadata().then(function (info) {
+			self.port.emit(emitEventName, info);
+		});
 	}
 }
 
@@ -25,8 +27,8 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 		var mainUi = _ui.main = document.createElement("DIV");
 		mainUi.id = _n("ui");
 		mainUi.innerHTML = 
-			'<a href="#" id="'+_n("close")+'">&#x2716;</a>'+
-			'<img src="'+_logoImg+'" id="'+_n("img")+'"/>' +
+			'<a id="'+_n("close")+'" title="Hide Raccoony">&#x2716;</a>'+
+			'<a id="'+_n("imglink")+'" title="Raccoony - click for page options"><img src="'+_logoImg+'" id="'+_n("img")+'" /></a>' +
 			'<div id="'+_n("ctr")+'">' +
 				'<div id="'+_n("notify")+'" class="'+_n("bubble")+' '+_n("hide")+'">'+
 					'<div id="'+_n("message")+'"></div>' +
@@ -42,17 +44,19 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 			'</div>';
 		document.body.appendChild(mainUi);
 		_ui.progress = _el("dl-progress");
-		_ui.logo = _el("img");
+		_ui.logo = _el("imglink");
 		_ui.notify = _el("notify");
 		_ui.message = _el("message");
 		_ui.close = _el("close");
 		_ui.tools = _el("tools")
 		
+		// Close button handler
 		_ui.close.addEventListener("click", function (ev) {
 			hideElt(mainUi);
 			ev.preventDefault();
 		});
 		
+		// Logo click handler
 		_ui.logo.addEventListener("click", function (ev) {
 			getMetadataResponderFn("checkIfDownloaded")();
 			var skipAnim = visibleElt(_ui.notify);
@@ -61,6 +65,7 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 			})
 		});
 		
+		// Action button handlers.
 		_el("download").addEventListener("click", function(ev) {
 			if (!_isDownloaded) {
 				getMetadataResponderFn("gotDownload")();
@@ -72,18 +77,22 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
 			hideElt(_ui.tools);
 		});
 		
+		// Hide tools when mousing away for more than a second.
+		var mouseLeaveTimeout = null;
 		mainUi.addEventListener("mouseleave", function (ev) {
-			hideElt(_ui.tools);
-		});
-		
-		document.body.addEventListener("click", function (ev) {
-			if (!closest(ev.target, "#"+_n("ui"))) {
+			mouseLeaveTimeout = setTimeout(function () {
 				hideElt(_ui.tools);
+				mouseLeaveTimeout = null;
+			}, 1000);
+		});
+		mainUi.addEventListener("mouseenter", function (ev) {
+			if (mouseLeaveTimeout) {
+				clearTimeout(mouseLeaveTimeout);
 			}
 		});
 		
-		checkIfDownloadRootSet()
-			.then(checkIfDownloaded);
+		checkIfDownloadRootSet();
+		checkIfDownloaded();
 	}
 	
 	function updateNotificationMessage(msg) {

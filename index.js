@@ -30,11 +30,25 @@ var button = buttons.ActionButton({
 // Page Mod declarations
 
 pageMod.PageMod({
-  include: "https://www.weasyl.com/submission/*",
+  include: ["https://www.weasyl.com/submission/*", "http://www.weasyl.com/submission/*"],
   contentScriptFile: ["./weasylDownload.js", "./common.js"],
   contentStyleFile: "./pageUi.css",
   onAttach: onPageLoad
-})
+});
+
+pageMod.PageMod({
+  include: ["https://www.sofurry.com/view/*", "http://www.sofurry.com/view/*"],
+  contentScriptFile: ["./sofurryDownload.js", "./common.js"],
+  contentStyleFile: "./pageUi.css",
+  onAttach: onPageLoad
+});
+
+pageMod.PageMod({
+  include: "*.deviantart.com", //TODO: use a regex for these.
+  contentScriptFile: ["./deviantArtDownload.js", "./common.js"],
+  contentStyleFile: "./pageUi.css",
+  onAttach: onPageLoad
+});
 
 function onPageLoad(worker) {
   // PageMod handler
@@ -52,13 +66,26 @@ function onPageLoad(worker) {
     // Disable the button whenever we switch away from this tab.
     button.badge = null;
     button.disabled = true;
+    button.removeListener("click", handleButtonClick);
   })
   if (worker.tab === tabs.activeTab) {
     enableButton();
   }
   
+  function handleButtonClick(state) { 
+    if (worker.tab === tabs.activeTab)
+    {
+      if (!downloaded) {
+        worker.port.emit("getDownload");
+      } else {
+        worker.port.emit("beginShowFolder");
+      }
+    }
+  };
+  
   function enableButton() {
     // Enable the button if we're on a supported page.
+    button.on("click", handleButtonClick);
     button.disabled = false;
     worker.port.emit("beginCheckIfDownloaded");
   }
@@ -75,7 +102,7 @@ function onPageLoad(worker) {
     worker.port.emit("isDownloaded", isDownloaded);
   }
   
-  function showError() {
+  function showErrorBadge() {
     // Show the error state in the toolbar.
     button.badge = "\u2716"; // multiplication x
     button.badgeColor = "#ff0000";
@@ -96,7 +123,8 @@ function onPageLoad(worker) {
       downloadRoot, 
       sanitizeFilename(info.service)));
     var targetDir = OS.Path.join(serviceDir, sanitizeFilename(info.user));
-    var targetPath = OS.Path.join(targetDir, sanitizeFilename(info.filename));
+    var submissionIdPart = info.submissionId ? info.submissionId + "-" : "";
+    var targetPath = OS.Path.join(targetDir, sanitizeFilename(submissionIdPart + info.filename));
     return {
       downloadRoot: downloadRoot,
       serviceDir: serviceDir,
@@ -108,7 +136,7 @@ function onPageLoad(worker) {
   function handleCheckIfDownloaded(info) {
     var paths = normalizePaths(info);
     if (!paths) {
-      showError(false);
+      showErrorBadge();
       return;
     }
     OS.File.exists(paths.targetPath).then(function (fileExists) {
@@ -142,14 +170,14 @@ function onPageLoad(worker) {
     // Handler for the gotDownload message
     
     if (!validateSubmissionMetadata(info)) {
-      showError();
-      worker.port.emit("downloadError", "Invalid paths.");
+      showErrorBadge();
+      worker.port.emit("downloadError", "Invalid submission metadata. (Maybe try updating Raccoony?)");
       return false;
     }
     var paths = normalizePaths(info);
     if (!paths) {
-      showError();
-      worker.port.emit("downloadError", "Download folder not set up.");
+      showErrorBadge();
+      worker.port.emit("downloadError", "The download folder is not set up. Go to the add-on page for Raccoony to set it up.");
       return false;
     }
     
@@ -165,10 +193,9 @@ function onPageLoad(worker) {
       .then(downloadFile)
       .then(function () {
         updateDownloadedState(true);
-        showNotification("Finished downloading " + info.filename);
         worker.port.emit("downloadComplete");
       }, function (error) {
-        showError();
+        showErrorBadge();
         worker.port.emit("downloadError", error);
       });
       
@@ -226,26 +253,6 @@ function onPageLoad(worker) {
     } 
     return false;
   }
-  
-  
-  function showNotification(msg, context) {
-    // Shows a popup notification.
-    // TODO: should probably change this to use a panel instead of desktop notifications.
-    notifications.notify({
-      title: "Raccoony",
-      text: msg,
-      iconUrl: "./icon-32.png"
-    }); 
-    worker.port.emit("notification", msg, context);
-  }
-  
-  button.on("click", function (state) { 
-    if (!downloaded) {
-      worker.port.emit("getDownload");
-    } else {
-      worker.port.emit("beginShowFolder");
-    }
-  })
 }
 
 //////////////////////
