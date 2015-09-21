@@ -255,7 +255,6 @@ function onPageLoad(worker) {
   }
   
   function showFolderInExplorerFromInfo(info) {
-    // TODO: FileUtils is a deprecated API, is there a replacement?
     var paths = normalizePaths(info);
     if (!showFolderInExplorer(paths.targetPath)) {
       showFolderInExplorer(paths.targetDir);
@@ -263,6 +262,7 @@ function onPageLoad(worker) {
   }
   
   function showFolderInExplorer(path) {
+    // TODO: FileUtils is a deprecated API, is there a replacement?
     var file = new FileUtils.File(path);
     if (file.exists()) {
       file.reveal();
