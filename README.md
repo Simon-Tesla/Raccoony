@@ -8,11 +8,12 @@ more features. I've captured a few in the issue tracker, and please feel free to
 others.
 
 These sites are currently supported:
-* Fur Affinity
-* InkBunny
-* Weasyl
-* SoFurry
-* deviantArt (coming soon)
+
+ * Fur Affinity
+ * InkBunny
+ * Weasyl
+ * SoFurry
+ * deviantArt (coming soon)
 
 The architecture of the addon makes it very easy to code support for more sites, 
 so if you see one not on the list, feel free to suggest or write your own plugin
@@ -22,7 +23,14 @@ to see an example.
 ##Download
 THIS IS CURRENTLY VERY PRE-ALPHA SOFTWARE. USE AT YOUR OWN RISK.
 
-[Download @raccoony-0.0.1.xpi](https://github.com/NatePri/Raccoony/blob/d89cf3e8941edf1c8f165d97aa1de8a2db5ab6c1/dist/@raccoony-0.0.1.xpi?raw=true)
+[Download @raccoony-0.0.2.xpi](https://github.com/NatePri/Raccoony/blob/master/dist/@raccoony-0.0.2.xpi?raw=true)
+
+##Change Log
+
+ * 0.0.2
+    - Fixed bug with saving Inkbunny submissions with multiple pages.
+ * 0.0.1
+    - Initial release.
 
 ##Licence
 The MIT License (MIT)
