@@ -1,162 +1,162 @@
 #raccoony-ui {
-	position: fixed;
-	left: 0;
-	bottom: 0;
-	transition: opacity .4s;
-	opacity: .25;
-	padding: .25em;
-	z-index: 10000;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-	font-size: 14px;
-	color: #000;
-	background-color: transparent;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    transition: opacity .4s;
+    opacity: .25;
+    padding: .25em;
+    z-index: 10000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 14px;
+    color: #000;
+    background-color: transparent;
 }
 
 #raccoony-ui:hover,
 #raccoony-ui.active {
-	opacity: 1;
+    opacity: 1;
 }
 
 @keyframes raccoony-fadein-anim {
-	from {opacity: 0; }
-	to { opacity: 1; }
+    from {opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes raccoony-fadeout-anim {
-	from { opacity: 1; }
-	to { opacity: 0; }
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 #raccoony-ui .raccoony-hide,
 #raccoony-ui.raccoony-hide {
-	display: none;
+    display: none;
 }
 
 #raccoony-ui .raccoony-begin-hide,
 #raccoony-ui.raccoony-begin-hide {
-	animation: raccoony-fadeout-anim .3s;
+    animation: raccoony-fadeout-anim .3s;
 }
 
 #raccoony-ui .raccoony-show,
 #raccoony-ui.raccoony-show {
-	animation: raccoony-fadein-anim .3s;
-	display: block;
+    animation: raccoony-fadein-anim .3s;
+    display: block;
 }
 
 #raccoony-ui .raccoony-action {
-	display: inline-block;
-	color: #fff !important;
-	border: 2px solid #0072C6;
-	border-radius: 0;
-	background: #0072C6;
-	box-shadow: none;
-	text-shadow: none;
-	padding: 4px;
-	box-sizing: border-box;
-	min-width: 150px;
-	margin: 4px;
-	font-family: "Segoe UI Semibold",'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-	font-size: 14px !important;
-	cursor: default;
+    display: inline-block;
+    color: #fff !important;
+    border: 2px solid #0072C6;
+    border-radius: 0;
+    background: #0072C6;
+    box-shadow: none;
+    text-shadow: none;
+    padding: 4px;
+    box-sizing: border-box;
+    min-width: 150px;
+    margin: 4px;
+    font-family: "Segoe UI Semibold",'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 14px !important;
+    cursor: default;
 }
 
 #raccoony-ui .raccoony-action:hover {
-	background-color: #0081e0;
+    background-color: #0081e0;
 }
 
 #raccoony-ui .raccoony-action:disabled,
 #raccoony-ui .raccoony-action:hover:disabled {
-	background-color: #ddd;
-	color: #666 !important;
-	border-color: #666;
+    background-color: #ddd;
+    color: #666 !important;
+    border-color: #666;
 }
 
 #raccoony-ui .raccoony-action span {
-	display: inline-block;
-	font-size: 16px;
-	vertical-align: center;
-	margin-left: 4px;
+    display: inline-block;
+    font-size: 16px;
+    vertical-align: center;
+    margin-left: 4px;
 }
 
 #raccoony-ui #raccoony-close {
-	position: absolute;
-	display: block;
-	left: 0;
-	bottom: 44px;
-	color: #fff;
-	width: 16px;
-	height: 16px;
-	line-height: 16px;
-	border: 2px solid #fff;
-	border-radius: 10px;
-	text-align: center;
-	font-size: 10px;
-	text-decoration: none;
-	background-color: transparent;
-	margin: 0;
-	padding: 0;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	cursor: pointer;
-	opacity: 0;
-	transition: opacity .4s;
-	background-color: rgba(0, 0, 0, .5);
+    position: absolute;
+    display: block;
+    left: 0;
+    bottom: 44px;
+    color: #fff;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 10px;
+    text-decoration: none;
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .4s;
+    background-color: rgba(0, 0, 0, .5);
 }
 #raccoony-ui:hover #raccoony-close {
-	opacity: .5;
+    opacity: .5;
 }
 
 #raccoony-ui #raccoony-close:hover {
-	opacity: 1;
+    opacity: 1;
 }
 
 #raccoony-ctr, 
 #raccoony-img {
-	display: inline-block;
-	vertical-align: bottom;
+    display: inline-block;
+    vertical-align: bottom;
 }
 
 #raccoony-dl-progress {
-	width: 100%;
+    width: 100%;
 }
 
 .raccoony-bubble {
-	color: #000;
-	background-color: #ddd;
-	border-radius: 5px;
-	box-shadow: 5px 5px 5px rgba(0,0,0,.5);
-	min-height: 50px;
-	padding: 5px 10px;
-	
-	background-image: -moz-linear-gradient(top, #ddd, #ddd);
-	position: relative;
-	margin-left: 15px;
+    color: #000;
+    background-color: #ddd;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,.5);
+    min-height: 50px;
+    padding: 5px 10px;
+    
+    background-image: -moz-linear-gradient(top, #ddd, #ddd);
+    position: relative;
+    margin-left: 15px;
 }
 
 .raccoony-bubble::before {
-	content: "";
-	width: 0px;
-	height: 0px;
-	border: 0.8em solid transparent;
-	position: absolute;
-	
-	/* below styles align the beak */
-	left: -20px;
-	bottom: 15px;
-	border-right: 10px solid #ddd;
+    content: "";
+    width: 0px;
+    height: 0px;
+    border: 0.8em solid transparent;
+    position: absolute;
+    
+    /* below styles align the beak */
+    left: -20px;
+    bottom: 15px;
+    border-right: 10px solid #ddd;
 }
 
 .raccoony-nodownload,
 .raccoony-need-dl-setup .raccoony-reqdownload {
-	display: none;
+    display: none;
 }
 .raccoony-need-dl-setup .raccoony-nodownload {
-	display: block;
-	margin-right: .5em;
-	color: #600;
-	max-width: 400px;
+    display: block;
+    margin-right: .5em;
+    color: #600;
+    max-width: 400px;
 }
 .raccoony-nodownload .rc-icon {
-	float: left;
-	font-size: 32px;
-	margin-right: 10px;
+    float: left;
+    font-size: 32px;
+    margin-right: 10px;
 }
