@@ -29,30 +29,32 @@ var button = buttons.ActionButton({
 /////////////////////////
 // Page Mod declarations
 
+var commonScript = ["./zepto.js", "./common.js"];
+
 pageMod.PageMod({
     include: "https://www.weasyl.com/submission/*",
-    contentScriptFile: ["./weasylDownload.js", "./common.js"],
+    contentScriptFile: ["./plugins/weasyl.js"].concat(commonScript),
     contentStyleFile: "./pageUi.css",
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
     include: "https://www.sofurry.com/view/*",
-    contentScriptFile: ["./sofurryDownload.js", "./common.js"],
+    contentScriptFile: ["./plugins/sofurry.js"].concat(commonScript),
     contentStyleFile: "./pageUi.css",
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
     include: "https://inkbunny.net/submissionview.php?id=*",
-    contentScriptFile: ["./inkbunnyDownload.js", "./common.js"],
+    contentScriptFile: ["./plugins/inkbunny.js"].concat(commonScript),
     contentStyleFile: "./pageUi.css",
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
     include: ["https://www.furaffinity.net/view/*", "http://www.furaffinity.net/view/*"],
-    contentScriptFile: ["./furaffinityDownload.js", "./common.js"],
+    contentScriptFile: ["./plugins/furaffinity.js"].concat(commonScript),
     contentStyleFile: "./pageUi.css",
     onAttach: onPageLoad
 });
@@ -61,7 +63,7 @@ if (false) {
     //TODO: Disabling deviantArt until I can get the URL thing straightened out.
     pageMod.PageMod({
         include: "*.deviantart.com", //TODO: use a regex for these.
-        contentScriptFile: ["./deviantArtDownload.js", "./common.js"],
+        contentScriptFile: ["./plugins/deviantart.js"].concat(commonScript),
         contentStyleFile: "./pageUi.css",
         onAttach: onPageLoad
     });
@@ -164,20 +166,11 @@ function onPageLoad(worker) {
     }
   
     function validateSubmissionMetadata(info) {
-        if (!info.url) {
-            console.error("Download URL not found.");
-            return false;	
-        }
-        if (!info.user)	{
-            console.error("Username not found.");
-            return false;
-        }
-        if (!info.filename)	{
-            console.error("Filename not found.");
-            return false;
-        }
-        if (!info.service) {
-            console.error("Service not found.");
+        let requiredProps = ['url', 'user', 'filename', 'service'];
+        for (let prop of requiredProps) {
+            if (!info[prop]) {
+                console.error("Field not found: " + prop);
+            }
             return false;
         }
         return true;

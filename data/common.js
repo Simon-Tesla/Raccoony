@@ -1,6 +1,6 @@
 function getMetadataResponderFn(emitEventName) {
     return function () {
-        getSubmissionMetadata().then(function (info) {
+        site.getSubmissionMetadata().then(function (info) {
             self.port.emit(emitEventName, info);
         });
     }
