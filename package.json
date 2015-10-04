@@ -9,11 +9,45 @@
     "firefox": ">=38.0a1"
   },
   "license": "MIT",
-  
-  "preferences": [{
-        "name": "downloadFolder",
-        "title": "Download Folder",
-        "description": "The folder where Raccoony will download art",
-        "type": "directory"
-    }]
+
+  "preferences": [
+    {
+      "name": "downloadFolder",
+      "title": "Download Folder",
+      "description": "The folder where Raccoony will download art",
+      "type": "directory"
+    },
+    {
+      "name": "tabLoadDelay",
+      "title": "Open all delay",
+      "description": "The delay for loading each submission when opening all submissions in tabs, in seconds.",
+      "type": "integer",
+      "value": 1
+    },
+    {
+      "name": "tabLoadOrder",
+      "title": "Open all order",
+      "description": "The order tabs will be opened in, if Raccoony does not detect an explicit sorting order. Sorting by date requires incremental submission IDs and is not guaranteed to work.",
+      "type": "menulist",
+      "value": "D-A",
+      "options": [
+        {
+          "value": "D-A",
+          "label": "By date, ascending"
+        },
+        {
+          "value": "D-D",
+          "label": "By date, descending"
+        },
+        {
+          "value": "P-A",
+          "label": "Page order"
+        },
+        {
+          "value": "P-D",
+          "label": "Reverse page order"
+        }
+      ]
+    }
+  ]
 }

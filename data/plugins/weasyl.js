@@ -4,30 +4,39 @@
         // TODO: Should look into using the Weasyl API for this.
         return new Promise(function (resolve, reject) {
             // Get the download button
-            var buttonSpan = document.querySelector("#detail-actions .icon-arrowDown");
-            var button = buttonSpan.parentElement;
+            let buttonSpan = document.querySelector("#detail-actions .icon-arrowDown");
+            let button = buttonSpan.parentElement;
 
             // Get the URL
-            var url = button.getAttribute("href");
-            var urlObj = new URL(url);
-
-            // Get the filename
             // Weasyl download URLs are of the format 
             // https://cdn.weasyl.com/~[user]/submissions/[id]/[hash]/[user]-[filename.ext]?download
-            var pathParts = urlObj.pathname.split('/');
-            var filename = pathParts.pop();
-            pathParts.pop(); //pop off the unneeded hash
-            var id = pathParts.pop();
+            let url = button.getAttribute("href");
+            let urlObj = new URL(url);
 
             // Get the username
-            var pathParts = urlObj.pathname.split('/'); // "/~user/..."
-            var username = pathParts[1] || "";
+            let pathParts = urlObj.pathname.split('/'); // "/~user/..."
+            let username = pathParts[1] || "";
             username = username.replace("~", "");
+
+            // Get the filename
+            let filename = pathParts.pop();
+            pathParts.pop(); //pop off the unneeded hash
+            let id = pathParts.pop();
+
+            // Strip off the username
+            filename = filename.substring(username.length + 1);
+
+            // TODO: don't repeat yourself
+            let extIndex = filename.lastIndexOf(".");
+            let ext = filename.substring(extIndex + 1);
+            filename = filename.substring(0, extIndex);
+
 
             resolve({
                 url: url,
                 user: username,
                 filename: filename,
+                extension: ext,
                 submissionId: id,
                 service: "weasyl"
             });
@@ -37,6 +46,7 @@
     function getSubmissionList() {
         return new Promise(function (resolve, reject) {
             let list = [];
+            let nosort = window.location.pathname.indexOf("/favorites") === 0;
             $links = $(".thumb a.thumb-bounds");
             console.log("$links", $links, $links.length);
             for (let ii = 0; ii < $links.length; ii++) {
@@ -57,7 +67,10 @@
                     id: id
                 })
             }
-            resolve(list);
+            resolve({
+                list: list,
+                nosort: nosort
+            });
         });
     }
 

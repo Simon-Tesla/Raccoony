@@ -17,7 +17,6 @@
             // And the extension - we use the preview image to determine this.
             var imgPreview = document.querySelector("#sfContentImage img");
             var ext = imgPreview.getAttribute("src").split('.').pop();
-            filename = filename + "." + ext;
 
             // Get the username
             var usernameElt = document.querySelector("#sf-userinfo-outer .sf-username");
@@ -27,6 +26,7 @@
                 url: url,
                 user: username,
                 filename: filename,
+                extension: ext,
                 submissionId: id,
                 service: "sofurry"
             });
@@ -36,7 +36,19 @@
     function getSubmissionList() {
         return new Promise(function (resolve, reject) {
             let list = [];
-            $links = $(".items a.sfArtworkSmallInner");
+            let nosort = window.location.search.indexOf("sort=") !== -1 ||
+                window.location.search.indexOf("sortby=") !== -1 ||
+                window.location.pathname.indexOf("/browse") === 0;
+            $links = $(".items a.sfArtworkSmallInner")
+                .add(".items .sf-story-big-headline a")
+                .add(".items .sf-story-headline a")
+                .add(".items .sfTextDark a")
+                .add(".items .sf-browse-shortlist-title a");
+            if (!$links.length) {
+                // Look for watchlist links
+                $links = $(".watchlist a.watchlist_thumbnail_link")
+                    .add(".watchlist h3 a");
+            }
             console.log("$links", $links, $links.length);
             for (let ii = 0; ii < $links.length; ii++) {
                 console.log("entering loop", ii, $links[ii]);
@@ -55,7 +67,10 @@
                     id: id
                 })
             }
-            resolve(list);
+            resolve({
+                list: list,
+                nosort: nosort
+            });
         });
     }
 

@@ -124,7 +124,6 @@
     background-color: #ddd;
     border-radius: 5px;
     box-shadow: 5px 5px 5px rgba(0,0,0,.5);
-    min-height: 50px;
     padding: 5px 10px;
     
     background-image: -moz-linear-gradient(top, #ddd, #ddd);
@@ -159,4 +158,16 @@
     float: left;
     font-size: 32px;
     margin-right: 10px;
+}
+
+#raccoony-ui #raccoony-download,
+#raccoony-ui #raccoony-open-folder,
+#raccoony-ui #raccoony-open-all {
+    display: none;
+}
+
+#raccoony-ui .raccoony-hassub #raccoony-download,
+#raccoony-ui .raccoony-hassub #raccoony-open-folder,
+#raccoony-ui .raccoony-haslist #raccoony-open-all {
+    display: inline-block;
 }

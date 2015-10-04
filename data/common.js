@@ -1,6 +1,24 @@
+let _submissionMetadataPromise = null;
+let _submissionListPromise = null;
+
+function getSubmissionMetadataCached() {
+    if (!_submissionMetadataPromise) {
+        _submissionMetadataPromise = site.getSubmissionMetadata();
+    }
+    return _submissionMetadataPromise;
+};
+
+function getSubmissionListCached() {
+    if (!_submissionListPromise) {
+        _submissionListPromise = site.getSubmissionList();
+    }
+    return _submissionListPromise;
+}
+
+// Submission metadata responder
 function getMetadataResponderFn(emitEventName) {
     return function () {
-        site.getSubmissionMetadata().then(function (info) {
+        getSubmissionMetadataCached().then(function (info) {
             self.port.emit(emitEventName, info);
         });
     }
@@ -9,6 +27,16 @@ function getMetadataResponderFn(emitEventName) {
 self.port.on("beginCheckIfDownloaded", getMetadataResponderFn("checkIfDownloaded"))
 self.port.on("getDownload", getMetadataResponderFn("gotDownload"));
 self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
+
+// Submission list responder
+function getSubmissionListResponderFn(emitEventName) {
+    return function () {
+        getSubmissionListCached().then(function (list) {
+            self.port.emit(emitEventName, list);
+        });
+    };
+}
+self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionList"));
 
 (function () {
     var _ui = {};
@@ -26,6 +54,7 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
     function injectUi() {
         var mainUi = _ui.main = document.createElement("DIV");
         mainUi.id = _n("ui");
+        mainUi.classList.add(_n("hide"));
         mainUi.innerHTML = 
             '<a id="'+_n("close")+'" title="Hide Raccoony">&#x2716;</a>'+
             '<a id="'+_n("imglink")+'" title="Raccoony - click for page options"><img src="'+_logoImg+'" id="'+_n("img")+'" /></a>' +
@@ -37,8 +66,9 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
                 '<div id="'+_n("tools")+'" class="'+_n("bubble")+' '+_n("hide")+'">'+
                     '<div class="'+_n("nodownload")+'"><div class="rc-icon">&#x26A0;</div> The download folder for Raccoony is not set up! Please go to the add-on settings in <a href="about:addons">Add-ons</a> &gt; Extensions, and click the Options button to set it up.</div>'+
                     '<div class="'+_n("reqdownload")+'">'+
-                        '<button id="'+_n("download")+'" class="'+_n("action")+'"><span>&#x25BC;</span> Download</button><br />'+
-                        '<button id="'+_n("open-folder")+'" class="'+_n("action")+'"><span>&#x1f4c2;</span> Open folder</button> '+
+                        '<button id="'+_n("download")+'" class="'+_n("action")+'"><span>&#x25BC;</span> Download</button>'+
+                        '<button id="' + _n("open-folder") + '" class="' + _n("action") + '"><span>&#x1f4c2;</span> Open folder</button> ' +
+                        '<button id="' + _n("open-all") + '" class="' + _n("action") + '"><span>&#x27A5;</span> Open all in tabs</button> ' +
                     '</div>'+
                 '</div>' +
             '</div>';
@@ -76,6 +106,11 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
             getMetadataResponderFn("showFolder")();
             hideElt(_ui.tools);
         });
+
+        _el("open-all").addEventListener("click", function (ev) {
+            getSubmissionListResponderFn("gotSubmissionList")();
+            hideElt(_ui.tools);
+        });
         
         // Hide tools when mousing away for more than a second.
         var mouseLeaveTimeout = null;
@@ -93,6 +128,23 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
         
         checkIfDownloadRootSet();
         checkIfDownloaded();
+
+        getSubmissionListCached().then(function (data) {
+            // If we have a submission list, show the folder UI.
+            let list = data.list;
+            if (list && list.length > 0) {
+                _ui.tools.classList.add(_n("haslist"));
+                _ui.main.classList.remove(_n("hide"));
+            }
+        });
+
+        getSubmissionMetadataCached().then(function (info) {
+            // If we have submission metadata, show the download UI.
+            if (info) {
+                _ui.tools.classList.add(_n("hassub"));
+                _ui.main.classList.remove(_n("hide"));
+            }
+        });
     }
     
     function updateNotificationMessage(msg) {
@@ -155,11 +207,9 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
         showElt(_ui.notify);
         _ui.progress.value = 0;
     });
-    self.port.on("downloadProgress", function (percent) {
-        _el("percent").innerHTML = percent;
-        _ui.progress.value = percent;
-    })
+    self.port.on("downloadProgress", onDownloadProgress);
     self.port.on("downloadComplete", function () {
+        onDownloadProgress(100);
         updateNotificationMessage('Download complete.');
         showIsDownloaded();
         hideProgress();
@@ -169,6 +219,11 @@ self.port.on("beginShowFolder", getMetadataResponderFn("showFolder"));
         hideProgress();
     });
     
+    function onDownloadProgress(percent) {
+        _el("percent").innerHTML = percent;
+        _ui.progress.value = percent;
+    }
+
     function visibleElt(el) {
         return !el.classList.contains(_n("hide"));
     }

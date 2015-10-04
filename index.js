@@ -1,19 +1,17 @@
 var {Cu, Cc, Ci} = require("chrome");
-var Downloads = Cu.import("resource://gre/modules/Downloads.jsm").Downloads;
-var OS = Cu.import("resource://gre/modules/osfile.jsm").OS;	
+//var Downloads = Cu.import("resource://gre/modules/Downloads.jsm").Downloads;
+//var OS = Cu.import("resource://gre/modules/osfile.jsm").OS;	
 // TODO: convert to using PromiseUtils.jsm or core/promises
-var Promise = Cu.import("resource://gre/modules/Promise.jsm").Promise;
-var Task = Cu.import("resource://gre/modules/Task.jsm").Task;
-var FileUtils = Cu.import("resource://gre/modules/FileUtils.jsm").FileUtils;
-var notifications = require("sdk/notifications");
-var self = require('sdk/self');
+//var Promise = Cu.import("resource://gre/modules/Promise.jsm").Promise;
+//var Task = Cu.import("resource://gre/modules/Task.jsm").Task;
+//var FileUtils = Cu.import("resource://gre/modules/FileUtils.jsm").FileUtils;
 var buttons = require('sdk/ui/button/action');
 var tabs = require("sdk/tabs");
 var pageMod = require("sdk/page-mod");
 var prefs = require('sdk/simple-prefs').prefs;
-var tabs = require("sdk/tabs");
 
-var data = self.data;
+var openTabs = require("./lib/openTabs.js");
+var Downloader = require("./lib/downloader.js").Downloader;
 
 var button = buttons.ActionButton({
     id: "raccoony-link",
@@ -26,48 +24,46 @@ var button = buttons.ActionButton({
     disabled: true
 });
 
+
 /////////////////////////
 // Page Mod declarations
 
 var commonScript = ["./zepto.js", "./common.js"];
 
 pageMod.PageMod({
-    include: "https://www.weasyl.com/submission/*",
+    include: "https://www.weasyl.com/*",
     contentScriptFile: ["./plugins/weasyl.js"].concat(commonScript),
     contentStyleFile: "./pageUi.css",
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
-    include: "https://www.sofurry.com/view/*",
+    include: "https://www.sofurry.com/*",
     contentScriptFile: ["./plugins/sofurry.js"].concat(commonScript),
     contentStyleFile: "./pageUi.css",
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
-    include: "https://inkbunny.net/submissionview.php?id=*",
+    include: "https://inkbunny.net/*",
     contentScriptFile: ["./plugins/inkbunny.js"].concat(commonScript),
     contentStyleFile: "./pageUi.css",
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
-    include: ["https://www.furaffinity.net/view/*", "http://www.furaffinity.net/view/*"],
+    include: ["https://www.furaffinity.net/*", "http://www.furaffinity.net/*"],
     contentScriptFile: ["./plugins/furaffinity.js"].concat(commonScript),
     contentStyleFile: "./pageUi.css",
     onAttach: onPageLoad
 });
 
-if (false) {
-    //TODO: Disabling deviantArt until I can get the URL thing straightened out.
-    pageMod.PageMod({
-        include: "*.deviantart.com", //TODO: use a regex for these.
-        contentScriptFile: ["./plugins/deviantart.js"].concat(commonScript),
-        contentStyleFile: "./pageUi.css",
-        onAttach: onPageLoad
-    });
-}
+pageMod.PageMod({
+    include: "*.deviantart.com", 
+    contentScriptFile: ["./plugins/deviantart.js"].concat(commonScript),
+    contentStyleFile: "./pageUi.css",
+    onAttach: onPageLoad
+});
 
 function onPageLoad(worker) {
     // PageMod handler
@@ -78,15 +74,17 @@ function onPageLoad(worker) {
     worker.port.on("showFolder", showFolderInExplorerFromInfo);
     worker.port.on("getDownloadRootSet", function () {
         worker.port.emit("gotDownloadRootSet", !!getDownloadRoot());
-    })
+    });
+    worker.port.on("gotSubmissionList", openAllInTabs)
   
     worker.tab.on("activate", enableButton);
-    worker.tab.on("deactivate", function () {
-        // Disable the button whenever we switch away from this tab.
-        button.badge = null;
-        button.disabled = true;
-        button.removeListener("click", handleButtonClick);
-    })
+    worker.tab.on("deactivate", disableButton);
+    worker.tab.on("close", function () {
+        if (worker.tab === tabs.activeTab) {
+            disableButton();
+        }
+    });
+
     if (worker.tab === tabs.activeTab) {
         enableButton();
     }
@@ -94,6 +92,7 @@ function onPageLoad(worker) {
     function handleButtonClick(state) { 
         if (worker.tab === tabs.activeTab)
         {
+            // TODO: handle non-submission pages appropriately.
             if (!downloaded) {
                 worker.port.emit("getDownload");
             } else {
@@ -107,6 +106,13 @@ function onPageLoad(worker) {
         button.on("click", handleButtonClick);
         button.disabled = false;
         worker.port.emit("beginCheckIfDownloaded");
+    }
+
+    function disableButton() {
+        // Disable the button whenever we switch away from this tab.
+        button.badge = null;
+        button.disabled = true;
+        button.removeListener("click", handleButtonClick);
     }
   
     function updateDownloadedState(isDownloaded) {
@@ -127,201 +133,45 @@ function onPageLoad(worker) {
         button.badgeColor = "#ff0000";
     }
   
+    function openAllInTabs(data) {
+        let list = data.list;
+        let order = data.nosort && prefs.tabLoadOrder.charAt(0) !== "P" ? "P-A" : prefs.tabLoadOrder;
+        openTabs.openAllInTabs(list, prefs.tabLoadDelay, order);
+    }
+
     function getDownloadRoot() {
         return prefs.downloadFolder; 
-        //return OS.Path.join(OS.Constants.Path.homeDir, "temp"); 
-    }
-  
-    function normalizePaths(info) {
-        // Get normalized paths from the submission metadata
-        var downloadRoot = getDownloadRoot();
-        if (!downloadRoot) {
-            return null;
-        }
-        var serviceDir = OS.Path.normalize(OS.Path.join(
-            downloadRoot, 
-            sanitizeFilename(info.service)));
-        var targetDir = OS.Path.join(serviceDir, sanitizeFilename(info.user));
-        var submissionIdPart = info.submissionId ? info.submissionId + "-" : "";
-        var targetPath = OS.Path.join(targetDir, sanitizeFilename(submissionIdPart + info.filename));
-        return {
-            downloadRoot: downloadRoot,
-            serviceDir: serviceDir,
-            targetDir: targetDir,
-            targetPath: targetPath
-        }
     }
   
     function handleCheckIfDownloaded(info) {
-        var paths = normalizePaths(info);
-        if (!paths) {
-            showErrorBadge();
-            return;
-        }
-        OS.File.exists(paths.targetPath).then(function (fileExists) {
+        let downloader = new Downloader(getDownloadRoot());
+        downloader.exists(info).then(function (fileExists) {
             updateDownloadedState(fileExists);
         }, function () {
             updateDownloadedState(false);
         });
     }
   
-    function validateSubmissionMetadata(info) {
-        let requiredProps = ['url', 'user', 'filename', 'service'];
-        for (let prop of requiredProps) {
-            if (!info[prop]) {
-                console.error("Field not found: " + prop);
-            }
-            return false;
-        }
-        return true;
-    }
-  
     function handleGotDownload(info) {
         // Handler for the gotDownload message
-    
-        if (!validateSubmissionMetadata(info)) {
+        let downloader = new Downloader(getDownloadRoot());
+        downloader.download(info, function () {
+            // onDownloadStart
+            worker.port.emit("downloadStart");
+        }, function (progress) {
+            // onDownloadProgress
+            worker.port.emit("downloadProgress", download.progress);
+        }).then(function () {
+            updateDownloadedState(true);
+            worker.port.emit("downloadComplete");
+        }, function (error) {
             showErrorBadge();
-            worker.port.emit("downloadError", "Invalid submission metadata. (Maybe try updating Raccoony?)");
-            return false;
-        }
-        var paths = normalizePaths(info);
-        if (!paths) {
-            showErrorBadge();
-            worker.port.emit("downloadError", "The download folder is not set up. Go to the add-on page for Raccoony to set it up.");
-            return false;
-        }
-    
-        var sourceUrl = info.url;
-        var serviceDir = paths.serviceDir;
-        var targetDir = paths.targetDir;
-        var targetPath = paths.targetPath;
-    
-        // Start the download process.
-        createTargetFolder(serviceDir)
-            .then(function () { return createTargetFolder(targetDir); })
-            .then(rejectIfFileExists)
-            .then(downloadFile)
-            .then(function () {
-                updateDownloadedState(true);
-                worker.port.emit("downloadComplete");
-            }, function (error) {
-                showErrorBadge();
-                worker.port.emit("downloadError", error);
-            });
-      
-        function rejectIfFileExists() {
-            // Returns a promise that rejects if the file exists.
-            return new Promise(function (resume, abort) {
-                OS.File.exists(targetPath).then(function (fileExists) {
-                    if (fileExists) { 
-                        abort("File already exists: " + targetPath);
-                    } else {
-                        resume();
-                    }
-                }, abort);
-            });
-        }
-    
-        function downloadFile() {
-            // Downloads the file.
-            return Task.spawn(function () {
-                worker.port.emit("downloadStart");
-                var download = yield Downloads.createDownload({
-                    source: sourceUrl,
-                    target: targetPath
-                });
-        
-                download.onchange = function () {
-                    console.log("Downloaded " + download.progress + "%");
-                    worker.port.emit("downloadProgress", download.progress);
-                }
-        
-                yield download.start();
-            })
-        }
-    }
-  
-    function createTargetFolder(targetDir) {
-        // Creates the target folder.
-        // Important: path must be sanitized before passing to this method.
-        return OS.File.makeDir(targetDir, { ignoreExisting: true });
+            worker.port.emit("downloadError", error);
+        });
     }
   
     function showFolderInExplorerFromInfo(info) {
-        var paths = normalizePaths(info);
-        if (!showFolderInExplorer(paths.targetPath)) {
-            showFolderInExplorer(paths.targetDir);
-        }
-    }
-  
-    function showFolderInExplorer(path) {
-        // TODO: FileUtils is a deprecated API, is there a replacement?
-        var file = new FileUtils.File(path);
-        if (file.exists()) {
-            file.reveal();
-            return true;
-        } 
-        return false;
+        let downloader = new Downloader(getDownloadRoot());
+        downloader.showFolder(info);
     }
 }
-
-//////////////////////
-// Utility functions
-// TODO: move to a separate file?
-
-function sanitizeFilename(filename)
-{
-    // Strip any non-alphanumeric characters at the beginning of the filename.
-    filename = filename.replace(/^[^a-zA-Z0-9]+/, "");
-    // Replace any spaces with underscores
-    filename = filename.replace(" ", "_");
-    // Replace any consecutive dots (e.g. "..") with a single dot.
-    filename = filename.replace(/\.+/g, ".");
-    // Strip out anything non-alphanumeric that isn't a -, _ or .
-    return filename.replace(/[^a-zA-Z0-9-_.]/g, "");
-}
-
-function merge(depth, target, source) {
-    // Merges two (or more) objects, giving the last one precedence
-    // If depth is specified, merges them that number of levels recursively.
-    var startExtra = 3;
-    if (typeof depth === "object") {
-        // User didn't specify what kind of merge they want.
-        // Default to shallow merge.
-        startExtra = 2;
-        source = target;
-        target = depth;
-        depth = 0;
-    }
-
-    if (typeof target !== 'object') {
-        // Create an empty object to merge to if none was provided.
-        target = {};
-    }
-  
-    if (typeof depth !== "number")
-    {
-        // If we weren't given a maximum depth for recursion, cast from a boolean.
-        // Maximum depth is 16 if depth coerces to true.
-        depth = depth ? 16 : 0;
-    }
-  
-    // Merge source with target
-    for (var property in source) {
-        if ( source.hasOwnProperty(property) ) {
-            var sourceProperty = source[ property ];
-            if (depth > 0 && typeof sourceProperty === 'object' ) {
-                target[ property ] = merge(depth - 1, target[ property ], sourceProperty );
-                continue;
-            }
-            target[ property ] = sourceProperty;
-        }
-    }
-  
-    // Merges the rest of the objects on the arguments list
-    for (var a = startExtra, l = arguments.length; a < l; a++) {
-        merge(depth, target, arguments[a]);
-    }
-  
-    return target;
-};
