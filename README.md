@@ -1,32 +1,42 @@
 #Raccoony
 A Firefox Addon that adds shiny new features (like automatic downloading) to art sites. 
 
-Currently, the primary feature of Raccoony is to make it very easy to download images 
-into nicely organized folders (currently hardcoded to "service/username/filename.ext"), 
-and then view the item in the folder after it's downloaded, but there are plans for many
-more features. I've captured a few in the issue tracker, and please feel free to suggest
-others.
+##Features
+ * Download any submission from a supported art site to your computer with a single click.
+   Files are downloaded into folders organized like so: 
+   `[service]/[username]/[id]_[filename]_by_[username].[ext]`
+ * Easily view a downloaded submission or user's folder in the OS file manager.
+ * Open all submissions in a given view in new tabs.
 
-These sites are currently supported:
+Many more features are planned. Check the issue tracker for some of them and please feel
+free to suggest more.
+
+##Supported sites
 
  * Fur Affinity
  * InkBunny
  * Weasyl
  * SoFurry
- * deviantArt (coming soon)
+ * deviantArt
 
-The architecture of the addon makes it very easy to code support for more sites, 
+The architecture of the addon makes it very easy to add support for more sites, 
 so if you see one not on the list, feel free to suggest or write your own plugin
-for it. Just look at [one of the *Download.js files](https://github.com/NatePri/Raccoony/blob/master/data/weasylDownload.js) 
+for it. Just look at [one of the plugin js files](https://github.com/NatePri/Raccoony/blob/master/data/plugins/weasyl.js) 
 to see an example.
 
 ##Download
 THIS IS CURRENTLY VERY PRE-ALPHA SOFTWARE. USE AT YOUR OWN RISK.
 
-[Download @raccoony-0.0.2.xpi](https://github.com/NatePri/Raccoony/blob/master/dist/@raccoony-0.0.2.xpi?raw=true)
+[Download @raccoony-0.0.3.xpi](https://github.com/NatePri/Raccoony/blob/master/dist/@raccoony-0.0.3.xpi?raw=true)
 
 ##Change Log
-
+ * 0.0.3
+    - Enabled deviantArt support
+    - Added Open in tabs feature (currently only accessible via page overlay)
+    - More consistent filename normalization. Note that this breaks compatibility
+      with existing filenames, so already downloaded submissions may show up as
+      not downloaded.
+    - Fixed a bunch of bugs and did some refactoring.
  * 0.0.2
     - Fixed bug with saving Inkbunny submissions with multiple pages.
  * 0.0.1
