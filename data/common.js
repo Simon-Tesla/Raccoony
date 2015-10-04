@@ -68,6 +68,7 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
                     '<div class="'+_n("reqdownload")+'">'+
                         '<button id="'+_n("download")+'" class="'+_n("action")+'"><span>&#x25BC;</span> Download</button>'+
                         '<button id="' + _n("open-folder") + '" class="' + _n("action") + '"><span>&#x1f4c2;</span> Open folder</button> ' +
+                        '<button id="' + _n("fullscreen") + '" class="' + _n("action") + '"><span>&#x1F50E;</span> Fullscreen</button> ' +
                         '<button id="' + _n("open-all") + '" class="' + _n("action") + '"><span>&#x27A5;</span> Open all in tabs</button> ' +
                     '</div>'+
                 '</div>' +
@@ -106,6 +107,23 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
             getMetadataResponderFn("showFolder")();
             hideElt(_ui.tools);
         });
+
+        _el("fullscreen").addEventListener("click", function (ev) {
+            hideElt(_ui.tools);
+            openFullscreenPreview();
+        });
+        self.port.on("showFullscreen", openFullscreenPreview);
+
+        function openFullscreenPreview() {
+            getSubmissionMetadataCached().then(function (info) {
+                $.magnificPopup.open({
+                    items: {
+                        src: info.url
+                    },
+                    type: 'image'
+                }, 0);
+            });
+        }
 
         _el("open-all").addEventListener("click", function (ev) {
             getSubmissionListResponderFn("gotSubmissionList")();

@@ -28,40 +28,41 @@ var button = buttons.ActionButton({
 /////////////////////////
 // Page Mod declarations
 
-var commonScript = ["./zepto.js", "./common.js"];
+var commonScript = ["./zepto.js", "./magnific.js", "./common.js"];
+var commonCss = ["./magnific.css", "./pageUi.css"];
 
 pageMod.PageMod({
     include: "https://www.weasyl.com/*",
     contentScriptFile: ["./plugins/weasyl.js"].concat(commonScript),
-    contentStyleFile: "./pageUi.css",
+    contentStyleFile: commonCss,
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
     include: "https://www.sofurry.com/*",
     contentScriptFile: ["./plugins/sofurry.js"].concat(commonScript),
-    contentStyleFile: "./pageUi.css",
+    contentStyleFile: commonCss,
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
     include: "https://inkbunny.net/*",
     contentScriptFile: ["./plugins/inkbunny.js"].concat(commonScript),
-    contentStyleFile: "./pageUi.css",
+    contentStyleFile: commonCss,
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
     include: ["https://www.furaffinity.net/*", "http://www.furaffinity.net/*"],
     contentScriptFile: ["./plugins/furaffinity.js"].concat(commonScript),
-    contentStyleFile: "./pageUi.css",
+    contentStyleFile: commonCss,
     onAttach: onPageLoad
 });
 
 pageMod.PageMod({
     include: "*.deviantart.com", 
     contentScriptFile: ["./plugins/deviantart.js"].concat(commonScript),
-    contentStyleFile: "./pageUi.css",
+    contentStyleFile: commonCss,
     onAttach: onPageLoad
 });
 
@@ -87,6 +88,10 @@ function onPageLoad(worker) {
 
     if (worker.tab === tabs.activeTab) {
         enableButton();
+    }
+
+    if (prefs.showFullscreenOnLoad) {
+        worker.port.emit("showFullscreen");
     }
   
     function handleButtonClick(state) { 

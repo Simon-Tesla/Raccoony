@@ -162,12 +162,14 @@
 
 #raccoony-ui #raccoony-download,
 #raccoony-ui #raccoony-open-folder,
+#raccoony-ui #raccoony-fullscreen,
 #raccoony-ui #raccoony-open-all {
     display: none;
 }
 
 #raccoony-ui .raccoony-hassub #raccoony-download,
 #raccoony-ui .raccoony-hassub #raccoony-open-folder,
+#raccoony-ui .raccoony-hassub #raccoony-fullscreen,
 #raccoony-ui .raccoony-haslist #raccoony-open-all {
     display: inline-block;
 }
