@@ -27,9 +27,14 @@ to see an example.
 ##Download
 THIS IS CURRENTLY VERY PRE-ALPHA SOFTWARE. USE AT YOUR OWN RISK.
 
-[Download @raccoony-0.0.3.xpi](https://github.com/NatePri/Raccoony/blob/master/dist/@raccoony-0.0.3.xpi?raw=true)
+[Download @raccoony-0.0.4.xpi](https://github.com/NatePri/Raccoony/blob/master/dist/@raccoony-0.0.3.xpi?raw=true)
 
 ##Change Log
+ * 0.0.4
+    - Added fullscreen preview feature.
+    - Added option to open the fullscreen preview immediately when opening a submission page.
+    - Fixed deviantArt downloading for submissions without a download button.
+    - Fixed deviantArt "open all in tabs" support on watchlist notifications page.
  * 0.0.3
     - Enabled deviantArt support
     - Added Open in tabs feature (currently only accessible via page overlay)
