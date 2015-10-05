@@ -69,6 +69,7 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
                         '<button id="'+_n("download")+'" class="'+_n("action")+'"><span>&#x25BC;</span> Download</button>'+
                         '<button id="' + _n("open-folder") + '" class="' + _n("action") + '"><span>&#x1f4c2;</span> Open folder</button> ' +
                         '<button id="' + _n("fullscreen") + '" class="' + _n("action") + '"><span>&#x1F50E;</span> Fullscreen</button> ' +
+                        '<button id="' + _n("close-fullscreen") + '" class="' + _n("action") + '" display="none"><span>&#x2716;</span> Exit fullscreen</button> ' +
                         '<button id="' + _n("open-all") + '" class="' + _n("action") + '"><span>&#x27A5;</span> Open all in tabs</button> ' +
                     '</div>'+
                 '</div>' +
@@ -120,10 +121,24 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
                     items: {
                         src: info.url
                     },
-                    type: 'image'
+                    type: 'image',
+                    callbacks: {
+                        open: function () {
+                            $(_el("fullscreen")).hide();
+                            $(_el("close-fullscreen")).show();
+                        },
+                        close: function () {
+                            $(_el("fullscreen")).show();
+                            $(_el("close-fullscreen")).hide();
+                        }
+                    }
                 }, 0);
             });
         }
+        $(_el("close-fullscreen")).click(function () {
+            $.magnificPopup.instance.close();
+            hideElt(_ui.tools);
+        });
 
         _el("open-all").addEventListener("click", function (ev) {
             getSubmissionListResponderFn("gotSubmissionList")();

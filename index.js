@@ -35,39 +35,45 @@ pageMod.PageMod({
     include: "https://www.weasyl.com/*",
     contentScriptFile: ["./plugins/weasyl.js"].concat(commonScript),
     contentStyleFile: commonCss,
-    onAttach: onPageLoad
+    onAttach: onPageLoad,
+    contentScriptWhen: "ready"
 });
 
 pageMod.PageMod({
     include: "https://www.sofurry.com/*",
     contentScriptFile: ["./plugins/sofurry.js"].concat(commonScript),
     contentStyleFile: commonCss,
-    onAttach: onPageLoad
+    onAttach: onPageLoad,
+    contentScriptWhen: "ready"
 });
 
 pageMod.PageMod({
     include: "https://inkbunny.net/*",
     contentScriptFile: ["./plugins/inkbunny.js"].concat(commonScript),
     contentStyleFile: commonCss,
-    onAttach: onPageLoad
+    onAttach: onPageLoad,
+    contentScriptWhen: "ready"
 });
 
 pageMod.PageMod({
     include: ["https://www.furaffinity.net/*", "http://www.furaffinity.net/*"],
     contentScriptFile: ["./plugins/furaffinity.js"].concat(commonScript),
     contentStyleFile: commonCss,
-    onAttach: onPageLoad
+    onAttach: onPageLoad,
+    contentScriptWhen: "ready"
 });
 
 pageMod.PageMod({
     include: "*.deviantart.com", 
     contentScriptFile: ["./plugins/deviantart.js"].concat(commonScript),
     contentStyleFile: commonCss,
-    onAttach: onPageLoad
+    onAttach: onPageLoad,
+    contentScriptWhen: "end" //DeviantArt renders its UI dynamically, so the DOM can't be scraped at onReady time.
 });
 
 function onPageLoad(worker) {
     // PageMod handler
+    console.log("Entering onPageLoad");
     var downloaded = false;
     worker.port.emit("injectUi");
     worker.port.on("gotDownload", handleGotDownload);
@@ -141,6 +147,7 @@ function onPageLoad(worker) {
     function openAllInTabs(data) {
         let list = data.list;
         let order = data.nosort && prefs.tabLoadOrder.charAt(0) !== "P" ? "P-A" : prefs.tabLoadOrder;
+        console.log("Opening tabs:", order, list);
         openTabs.openAllInTabs(list, prefs.tabLoadDelay, order);
     }
 
@@ -149,6 +156,7 @@ function onPageLoad(worker) {
     }
   
     function handleCheckIfDownloaded(info) {
+        console.log("handleCheckIfDownloaded", info);
         let downloader = new Downloader(getDownloadRoot());
         downloader.exists(info).then(function (fileExists) {
             updateDownloadedState(fileExists);
@@ -159,23 +167,29 @@ function onPageLoad(worker) {
   
     function handleGotDownload(info) {
         // Handler for the gotDownload message
+        console.log("handleGotDownload", info);
         let downloader = new Downloader(getDownloadRoot());
         downloader.download(info, function () {
             // onDownloadStart
+            console.log("onDownloadStart");
             worker.port.emit("downloadStart");
         }, function (progress) {
             // onDownloadProgress
-            worker.port.emit("downloadProgress", download.progress);
+            console.log("onDownloadProgress", progress);
+            worker.port.emit("downloadProgress", progress);
         }).then(function () {
+            console.log("onDownloadFinished");
             updateDownloadedState(true);
             worker.port.emit("downloadComplete");
         }, function (error) {
+            console.log("onDownloadError", error);
             showErrorBadge();
             worker.port.emit("downloadError", error);
         });
     }
   
     function showFolderInExplorerFromInfo(info) {
+        console.log("showFolderInExplorerFromInfo", info);
         let downloader = new Downloader(getDownloadRoot());
         downloader.showFolder(info);
     }
