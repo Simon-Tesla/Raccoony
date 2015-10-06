@@ -59,6 +59,7 @@
                 submissionId: id,
                 //title: title,
                 extension: ext,
+                type: fileTypes.getTypeByExt(ext),
                 service: "inkbunny"
             });
         });

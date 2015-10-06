@@ -71,6 +71,7 @@
                     user: username,
                     filename: filename,
                     extension: ext,
+                    type: fileTypes.getTypeByExt(ext),
                     submissionId: id,
                     service: "deviantart"
                 });
@@ -81,8 +82,16 @@
         });
     }
 
+    let _submissionListQuery = ".messages a.thumb, .folderview a.thumb, .stream a.thumb";
+
+    function isNotificationPage() {
+        return window.location.pathname.indexOf("/notifications") === 0;
+    }
 
     function getSubmissionList() {
+        //TODO: The Notifications page is rendered with data retrieved via a later XHR, 
+        // so the UI is not always ready when this executes.
+        // Also, Raccoony does not always respect changing between different tabs on the page.
         return new Promise(function (resolve, reject) {
             try {
                 let list = [];
@@ -90,7 +99,7 @@
                     window.location.pathname.indexOf("/browse") === 0 ||
                     window.location.search.indexOf("q=") !== -1 ||
                     window.location.search.indexOf("order=") !== -1;
-                $links = $(".messages a.thumb, .folderview a.thumb, .stream a.thumb");
+                $links = $(_submissionListQuery);
                 //console.log("$links", $links, $links.length);
                 for (let ii = 0; ii < $links.length; ii++) {
                     //console.log("entering loop", ii, $links[ii]);
@@ -123,6 +132,11 @@
 
     return {
         getSubmissionMetadata: getSubmissionMetadata,
-        getSubmissionList: getSubmissionList
+        getSubmissionList: getSubmissionList,
+        forceSubmissionListOn: isNotificationPage,
+        // deviantArt makes extensive use of XHR in their site, so you can never guarantee that 
+        // the DOM hasn't changed out from under you. Therefore, we disable any caching of responses.
+        // TODO: investigate invalidating caches based on URL changes
+        nocache: true 
     };
 })();

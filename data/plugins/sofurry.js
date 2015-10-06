@@ -27,6 +27,7 @@
                 user: username,
                 filename: filename,
                 extension: ext,
+                type: fileTypes.getTypeByExt(ext),
                 submissionId: id,
                 service: "sofurry"
             });

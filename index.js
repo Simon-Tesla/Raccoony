@@ -101,8 +101,7 @@ function onPageLoad(worker) {
     }
   
     function handleButtonClick(state) { 
-        if (worker.tab === tabs.activeTab)
-        {
+        if (worker.tab === tabs.activeTab) {
             // TODO: handle non-submission pages appropriately.
             if (!downloaded) {
                 worker.port.emit("getDownload");
@@ -148,7 +147,7 @@ function onPageLoad(worker) {
         let list = data.list;
         let order = data.nosort && prefs.tabLoadOrder.charAt(0) !== "P" ? "P-A" : prefs.tabLoadOrder;
         console.log("Opening tabs:", order, list);
-        openTabs.openAllInTabs(list, prefs.tabLoadDelay, order);
+        openTabs.openAllInTabs(list, prefs.tabLoadDelay || 1, order);
     }
 
     function getDownloadRoot() {

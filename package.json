@@ -10,6 +10,8 @@
   },
   "license": "MIT",
 
+  "updateURL": "https://raw.github.com/NatePri/Raccoony/blob/master/dist/update.rdf",
+
   "preferences": [
     {
       "name": "downloadFolder",

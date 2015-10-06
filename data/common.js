@@ -1,15 +1,46 @@
+//TODO: separate out into individual files (maybe some lightweight non-loading AMD pattern?)
+
+////////////////////
+// File type mapping
+var fileTypes = (function () {
+    let extMap = {};
+    let fileTypes = {
+        'image': ['jpg', 'jpeg', 'png', 'gif'],
+        'text': ['txt', 'rtf', 'doc', 'docx', 'odf'],
+        'flash': ['swf'],
+        'video': ['mpeg', 'mpg', 'mp4', 'avi', 'divx', 'mkv', 'flv', 'mov', 'wmv']
+    };
+
+    // Create extension to type mapping
+    for (let type in fileTypes) {
+        let extList = fileTypes[type];
+        for (let ext of extList) {
+            extMap[ext] = type;
+        }
+    };
+
+    fileTypes.getTypeByExt = function (ext) {
+        return extMap[ext] || "unknown";
+    };
+
+    return fileTypes;
+})();
+
+///////////////////////////////
+// Submission metadata handlers
+
 let _submissionMetadataPromise = null;
 let _submissionListPromise = null;
 
 function getSubmissionMetadataCached() {
-    if (!_submissionMetadataPromise) {
+    if (!_submissionMetadataPromise || site.nocache) {
         _submissionMetadataPromise = site.getSubmissionMetadata();
     }
     return _submissionMetadataPromise;
 };
 
 function getSubmissionListCached() {
-    if (!_submissionListPromise) {
+    if (!_submissionListPromise || site.nocache) {
         _submissionListPromise = site.getSubmissionList();
     }
     return _submissionListPromise;
@@ -48,30 +79,32 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
     function _el(id) {
         return document.getElementById(_n(id));
     }
-    
-    var _logoImg = "data:image/png;base64,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";
 
     function injectUi() {
+        //TODO: refactor the UI bits to have better seperation of concerns, possibly some lightweight MVVM/MVC pattern.
+        //TODO: is there a better way to do templates? :P
+        //TODO: refactor to use Zepto more, especially for hiding/showing UI.
+
         var mainUi = _ui.main = document.createElement("DIV");
         mainUi.id = _n("ui");
         mainUi.classList.add(_n("hide"));
-        mainUi.innerHTML = 
-            '<a id="'+_n("close")+'" title="Hide Raccoony">&#x2716;</a>'+
-            '<a id="'+_n("imglink")+'" title="Raccoony - click for page options"><img src="'+_logoImg+'" id="'+_n("img")+'" /></a>' +
-            '<div id="'+_n("ctr")+'">' +
-                '<div id="'+_n("notify")+'" class="'+_n("bubble")+' '+_n("hide")+'">'+
-                    '<div id="'+_n("message")+'"></div>' +
-                    '<progress value="0" max="100" id="'+_n("dl-progress")+'" class="'+_n("nodisplay")+'" />'+
+        mainUi.innerHTML =
+            '<a id="' + _n("close") + '" title="Hide Raccoony">&#x2716;</a>' +
+            '<a id="' + _n("imglink") + '" title="Raccoony - click for page options"><img src="resource://raccoony/data/icon-64.png" id="' + _n("img") + '" /></a>' +
+            '<div id="' + _n("ctr") + '">' +
+                '<div id="' + _n("notify") + '" class="' + _n("bubble") + ' ' + _n("hide") + '">' +
+                    '<div id="' + _n("message") + '"></div>' +
+                    '<progress value="0" max="100" id="' + _n("dl-progress") + '" class="' + _n("nodisplay") + '" />' +
                 '</div>' +
-                '<div id="'+_n("tools")+'" class="'+_n("bubble")+' '+_n("hide")+'">'+
-                    '<div class="'+_n("nodownload")+'"><div class="rc-icon">&#x26A0;</div> The download folder for Raccoony is not set up! Please go to the add-on settings in <a href="about:addons">Add-ons</a> &gt; Extensions, and click the Options button to set it up.</div>'+
-                    '<div class="'+_n("reqdownload")+'">'+
-                        '<button id="'+_n("download")+'" class="'+_n("action")+'"><span>&#x25BC;</span> Download</button>'+
+                '<div id="' + _n("tools") + '" class="' + _n("bubble") + ' ' + _n("hide") + '">' +
+                    '<div class="' + _n("nodownload") + '"><div class="rc-icon">&#x26A0;</div> The download folder for Raccoony is not set up! Please go to the add-on settings in <a href="about:addons">Add-ons</a> &gt; Extensions, and click the Options button to set it up.</div>' +
+                    '<div class="' + _n("reqdownload") + '">' +
+                        '<button id="' + _n("download") + '" class="' + _n("action") + '"><span>&#x25BC;</span> Download</button>' +
                         '<button id="' + _n("open-folder") + '" class="' + _n("action") + '"><span>&#x1f4c2;</span> Open folder</button> ' +
-                        '<button id="' + _n("fullscreen") + '" class="' + _n("action") + '"><span>&#x1F50E;</span> Fullscreen</button> ' +
-                        '<button id="' + _n("close-fullscreen") + '" class="' + _n("action") + '" display="none"><span>&#x2716;</span> Exit fullscreen</button> ' +
+                        '<button id="' + _n("fullscreen") + '" class="' + _n("action") + '" style="display:none"><span>&#x1F50E;</span> Fullscreen</button> ' +
+                        '<button id="' + _n("close-fullscreen") + '" class="' + _n("action") + '" style="display:none"><span>&#x2716;</span> Exit fullscreen</button> ' +
                         '<button id="' + _n("open-all") + '" class="' + _n("action") + '"><span>&#x27A5;</span> Open all in tabs</button> ' +
-                    '</div>'+
+                    '</div>' +
                 '</div>' +
             '</div>';
         document.body.appendChild(mainUi);
@@ -117,22 +150,24 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
 
         function openFullscreenPreview() {
             getSubmissionMetadataCached().then(function (info) {
-                $.magnificPopup.open({
-                    items: {
-                        src: info.url
-                    },
-                    type: 'image',
-                    callbacks: {
-                        open: function () {
-                            $(_el("fullscreen")).hide();
-                            $(_el("close-fullscreen")).show();
+                if (info.url && info.type === "image") {
+                    $.magnificPopup.open({
+                        items: {
+                            src: info.url
                         },
-                        close: function () {
-                            $(_el("fullscreen")).show();
-                            $(_el("close-fullscreen")).hide();
+                        type: 'image',
+                        callbacks: {
+                            open: function () {
+                                $(_el("fullscreen")).hide();
+                                $(_el("close-fullscreen")).show();
+                            },
+                            close: function () {
+                                $(_el("fullscreen")).show();
+                                $(_el("close-fullscreen")).hide();
+                            }
                         }
-                    }
-                }, 0);
+                    }, 0);
+                }
             });
         }
         $(_el("close-fullscreen")).click(function () {
@@ -162,6 +197,13 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
         checkIfDownloadRootSet();
         checkIfDownloaded();
 
+        if (site.forceSubmissionListOn && site.forceSubmissionListOn()) {
+            // In some cases, the site may not have a submission list ready in the DOM on page load.
+            // This allows us to show the open all in tabs UI in spite of that.
+            _ui.tools.classList.add(_n("haslist"));
+            _ui.main.classList.remove(_n("hide"));
+        }
+
         getSubmissionListCached().then(function (data) {
             // If we have a submission list, show the folder UI.
             let list = data.list;
@@ -176,6 +218,9 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
             if (info) {
                 _ui.tools.classList.add(_n("hassub"));
                 _ui.main.classList.remove(_n("hide"));
+                if (info.url && info.type === "image") {
+                    $(_el("fullscreen")).show();
+                }
             }
         });
     }
