@@ -1,10 +1,4 @@
 var {Cu, Cc, Ci} = require("chrome");
-//var Downloads = Cu.import("resource://gre/modules/Downloads.jsm").Downloads;
-//var OS = Cu.import("resource://gre/modules/osfile.jsm").OS;	
-// TODO: convert to using PromiseUtils.jsm or core/promises
-//var Promise = Cu.import("resource://gre/modules/Promise.jsm").Promise;
-//var Task = Cu.import("resource://gre/modules/Task.jsm").Task;
-//var FileUtils = Cu.import("resource://gre/modules/FileUtils.jsm").FileUtils;
 var buttons = require('sdk/ui/button/action');
 var tabs = require("sdk/tabs");
 var pageMod = require("sdk/page-mod");

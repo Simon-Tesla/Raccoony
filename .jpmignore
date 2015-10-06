@@ -1,0 +1,14 @@
+﻿# Visual Studio files
+*.csproj
+*.csproj.user
+*.sln
+.vs
+
+.gitignore
+.gitattributes
+.jpmignore
+
+bin/
+dist/
+.git/
+obj/
