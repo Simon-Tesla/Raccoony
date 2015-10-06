@@ -13,7 +13,7 @@
         <RDF:li>
           <RDF:Description>
             <!-- This is the version number of the add-on -->
-            <em:version>0.0.9</em:version>
+            <em:version>0.0.10</em:version>
 
             <!-- One targetApplication for each application the add-on is compatible with -->
             <em:targetApplication>
