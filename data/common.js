@@ -192,6 +192,9 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
             if (mouseLeaveTimeout) {
                 clearTimeout(mouseLeaveTimeout);
             }
+            if (!visibleElt(_ui.notify)) {
+                showElt(_ui.tools);
+            }
         });
         
         checkIfDownloadRootSet();
@@ -241,7 +244,7 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
     function showIsDownloaded() {
         _isDownloaded = true;
         var dl = _el("download");
-        dl.innerHTML = "&#x2713; File exists";
+        dl.innerHTML = "<span>&#x2713;</span> File exists";
         dl.disabled = true;
     }
     
