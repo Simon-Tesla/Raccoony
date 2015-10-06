@@ -27,7 +27,7 @@ to see an example.
 ##Download
 **This is alpha-quality software.** There are bugs, and while it shouldn't harm your computer, use it at your own risk.
 
-[Download raccoony.xpi](https://github.com/NatePri/Raccoony/blob/master/dist/raccoony.xpi?raw=true)
+[Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
  * 0.0.6
