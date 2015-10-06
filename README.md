@@ -25,11 +25,15 @@ for it. Just look at [one of the plugin js files](https://github.com/NatePri/Rac
 to see an example.
 
 ##Download
-THIS IS CURRENTLY VERY PRE-ALPHA SOFTWARE. USE AT YOUR OWN RISK.
+**This is alpha-quality software.** There are bugs, and while it shouldn't harm your computer, use it at your own risk.
 
-[Download @raccoony-0.0.4.xpi](https://github.com/NatePri/Raccoony/blob/master/dist/@raccoony-0.0.3.xpi?raw=true)
+[Download raccoony.xpi](https://github.com/NatePri/Raccoony/blob/master/dist/raccoony.xpi?raw=true)
 
 ##Change Log
+ * 0.0.5
+    - Fixed some issues with the fullscreen preview showing on pages that aren't previewable.
+    - Fixed some issues with deviantArt not showing "open in tabs", or loading the incorrect submissions.
+    - Added automatic updating - your browser should pick up the next version of raccoony automatically.
  * 0.0.4
     - Added fullscreen preview feature.
     - Added option to open the fullscreen preview immediately when opening a submission page.
