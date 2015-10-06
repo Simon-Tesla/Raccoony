@@ -30,6 +30,10 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/blob/master/dist/raccoony.xpi?raw=true)
 
 ##Change Log
+ * 0.0.6
+    - Show UI on hover.
+    - Minor display fixes.
+    - Testing out auto-update feature.
  * 0.0.5
     - Fixed some issues with the fullscreen preview showing on pages that aren't previewable.
     - Fixed some issues with deviantArt not showing "open in tabs", or loading the incorrect submissions.
