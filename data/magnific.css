@@ -277,8 +277,8 @@ img.mfp-img {
     content: '';
     position: absolute;
     left: 0;
-    top: 40px;
-    bottom: 40px;
+    top: 10px;
+    bottom: 10px;
     display: block;
     right: 0;
     width: auto;

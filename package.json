@@ -1,7 +1,7 @@
 {
   "title": "Raccoony",
   "name": "raccoony",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Adds shiny new features (like automatic downloading) to art sites.",
   "main": "index.js",
   "author": "NatePri",
@@ -10,7 +10,7 @@
   },
   "license": "MIT",
 
-  "updateURL": "https://raw.githubusercontent.com/NatePri/Raccoony/master/dist/update.rdf",
+  "updateURL": "https://raw.github.com/NatePri/Raccoony/master/dist/update.rdf",
 
   "preferences": [
     {

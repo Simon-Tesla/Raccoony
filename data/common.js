@@ -84,6 +84,8 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
         //TODO: refactor the UI bits to have better seperation of concerns, possibly some lightweight MVVM/MVC pattern.
         //TODO: is there a better way to do templates? :P
         //TODO: refactor to use Zepto more, especially for hiding/showing UI.
+        //TODO: use contentScriptOptions to pass prefs/templates to the content script.
+        //TODO: replace Magnific Popup with a smaller image viewer (write our own?)
 
         var mainUi = _ui.main = document.createElement("DIV");
         mainUi.id = _n("ui");
@@ -197,6 +199,15 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
             }
         });
         
+        window.addEventListener("wheel", function (ev) {
+            if (ev.deltaY > 0 && $.magnificPopup.instance) {
+                $.magnificPopup.instance.close();
+            } else if (window.scrollY === 0) {
+                // TODO: make this respect the configuration
+                openFullscreenPreview();
+            }
+        });
+
         checkIfDownloadRootSet();
         checkIfDownloaded();
 
