@@ -34,6 +34,7 @@ to see an example.
     - Skipped a few version numbers while testing out the auto-update feature. 
       If you use this version of Raccoony, it should auto-update correctly in the future.
       (At least until Firefox stops allowing unsigned addons.)
+    - Removed a bunch of stuff from the XPI that shouldn't have been getting packaged with it.
  * 0.0.6
     - Show UI on hover.
     - Minor display fixes.
