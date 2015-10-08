@@ -30,6 +30,10 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+ * 0.0.10
+    - Skipped a few version numbers while testing out the auto-update feature. 
+      If you use this version of Raccoony, it should auto-update correctly in the future.
+      (At least until Firefox stops allowing unsigned addons.)
  * 0.0.6
     - Show UI on hover.
     - Minor display fixes.
