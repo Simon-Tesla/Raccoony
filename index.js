@@ -4,6 +4,7 @@ var tabs = require("sdk/tabs");
 var pageMod = require("sdk/page-mod");
 var prefs = require('sdk/simple-prefs').prefs;
 var { Hotkey } = require("sdk/hotkeys");
+var {Services} = Cu.import('resource://gre/modules/Services.jsm');
 
 var openTabs = require("./lib/openTabs.js");
 var Downloader = require("./lib/downloader.js").Downloader;
@@ -19,6 +20,11 @@ var button = buttons.ActionButton({
     disabled: true
 });
 
+//TODO: hook this up somewhere.
+function openPreferencesPane() {
+    let paneAddr = "addons://detail/%40raccoony/preferences";
+    Services.wm.getMostRecentWindow('navigator:browser').BrowserOpenAddonsMgr(paneAddr);
+}
 
 /////////////////////////
 // Page Mod declarations
@@ -75,6 +81,8 @@ function onPageLoad(worker) {
             autoFullscreen: prefs.showFullscreenOnLoad
         }
     });
+
+    worker.port.on("openPrefs", openPreferencesPane);
     worker.port.on("gotDownload", handleGotDownload);
     worker.port.on("checkIfDownloaded", handleCheckIfDownloaded);
     worker.port.on("showFolder", showFolderInExplorerFromInfo);

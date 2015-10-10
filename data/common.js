@@ -100,7 +100,7 @@ self.port.on("beginOpenAllInTabs", getSubmissionListResponderFn("openAllInTabs")
                     '<progress value="0" max="100" id="' + _n("dl-progress") + '" class="' + _n("nodisplay") + '" />' +
                 '</div>' +
                 '<div id="' + _n("tools") + '" class="' + _n("bubble") + ' ' + _n("hide") + '">' +
-                    '<div class="' + _n("nodownload") + '"><div class="rc-icon">&#x26A0;</div> The download folder for Raccoony is not set up! Please go to the add-on settings in <a href="about:addons">Add-ons</a> &gt; Extensions, and click the Options button to set it up.</div>' +
+                    '<div class="' + _n("nodownload") + '"><div class="rc-icon">&#x26A0;</div> The download folder for Raccoony is not set up! <br/><button id="' + _n('open-prefs') + '" class="' + _n("action") + '"><span>&#x2699;</span> Set up Raccoony</button></div>' +
                     '<div class="' + _n("reqdownload") + '">' +
                         '<button id="' + _n("download") + '" class="' + _n("action") + '"><span>&#x25BC;</span> Download</button>' +
                         '<button id="' + _n("open-folder") + '" class="' + _n("action") + '"><span>&#x1f4c2;</span> Open folder</button> ' +
@@ -134,6 +134,9 @@ self.port.on("beginOpenAllInTabs", getSubmissionListResponderFn("openAllInTabs")
         });
         
         // Action button handlers.
+        _el("open-prefs").addEventListener("click", function () {
+            self.port.emit("openPrefs");
+        });
         _el("download").addEventListener("click", function(ev) {
             if (!_isDownloaded) {
                 getMetadataResponderFn("gotDownload")();
@@ -315,8 +318,15 @@ self.port.on("beginOpenAllInTabs", getSubmissionListResponderFn("openAllInTabs")
         hideProgress();
     });
     self.port.on("downloadError", function (msg) {
-        updateNotificationMessage('Error downloading. ' + msg);
-        hideProgress();
+        if (msg === "downloadFolder") {
+            _ui.main.classList.add("active");
+            hideElt(_ui.notify);
+            _ui.tools.classList.add(_n("need-dl-setup"));
+            showElt(_ui.tools);
+        } else {
+            updateNotificationMessage('Error downloading: ' + msg);
+            hideProgress();
+        }
     });
     
     function onDownloadProgress(percent) {
