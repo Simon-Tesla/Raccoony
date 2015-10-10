@@ -7,6 +7,7 @@ A Firefox Addon that adds shiny new features (like automatic downloading) to art
    `[service]/[username]/[id]_[filename]_by_[username].[ext]`
  * Easily view a downloaded submission or user's folder in the OS file manager.
  * Open all submissions in a given view in new tabs.
+ * Preview image submissions in a fullscreen view.
 
 Many more features are planned. Check the issue tracker for some of them and please feel
 free to suggest more.

@@ -88,12 +88,13 @@ self.port.on("beginOpenAllInTabs", getSubmissionListResponderFn("openAllInTabs")
         //TODO: use contentScriptOptions to pass prefs/templates to the content script.
         //TODO: replace Magnific Popup with a smaller image viewer (write our own?)
 
+        var logoUrl = initProps.dataPath + "icon-64.png";
         var mainUi = _ui.main = document.createElement("DIV");
         mainUi.id = _n("ui");
         mainUi.classList.add(_n("hide"));
         mainUi.innerHTML =
             '<a id="' + _n("close") + '" title="Hide Raccoony">&#x2716;</a>' +
-            '<a id="' + _n("imglink") + '" title="Raccoony - click for page options"><img src="resource://raccoony/data/icon-64.png" id="' + _n("img") + '" /></a>' +
+            '<a id="' + _n("imglink") + '" title="Raccoony - click for page options"><img src="'+logoUrl+'" id="' + _n("img") + '" /></a>' +
             '<div id="' + _n("ctr") + '">' +
                 '<div id="' + _n("notify") + '" class="' + _n("bubble") + ' ' + _n("hide") + '">' +
                     '<div id="' + _n("message") + '"></div>' +

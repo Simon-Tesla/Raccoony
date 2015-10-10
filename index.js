@@ -5,6 +5,7 @@ var pageMod = require("sdk/page-mod");
 var prefs = require('sdk/simple-prefs').prefs;
 var { Hotkey } = require("sdk/hotkeys");
 var {Services} = Cu.import('resource://gre/modules/Services.jsm');
+var self = require("sdk/self");
 
 var openTabs = require("./lib/openTabs.js");
 var Downloader = require("./lib/downloader.js").Downloader;
@@ -79,7 +80,8 @@ function onPageLoad(worker) {
     worker.port.emit("injectUi", {
         prefs: {
             autoFullscreen: prefs.showFullscreenOnLoad
-        }
+        },
+        dataPath: self.data.url("")
     });
 
     worker.port.on("openPrefs", openPreferencesPane);
