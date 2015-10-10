@@ -30,6 +30,9 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+ * 0.0.11
+    - Added hotkeys for downloading (`CTRL`+`F1`), opening all in tabs (`CTRL`+`F2`), and toggling fullscreen mode (`CTRL`+`F3`). These hotkeys can be rebound in preferences, using the [instructions found here](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/hotkeys#Hotkey%28options%29).
+    - Fullscreen can be dismissed by scrolling the mousewheel down. If auto-fullscreen is enabled, scrolling to the top of the page will re-enter fullscreen mode.
  * 0.0.10
     - Skipped a few version numbers while testing out the auto-update feature. 
       If you use this version of Raccoony, it should auto-update correctly in the future.
