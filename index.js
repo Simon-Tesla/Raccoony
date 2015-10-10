@@ -3,6 +3,7 @@ var buttons = require('sdk/ui/button/action');
 var tabs = require("sdk/tabs");
 var pageMod = require("sdk/page-mod");
 var prefs = require('sdk/simple-prefs').prefs;
+var { Hotkey } = require("sdk/hotkeys");
 
 var openTabs = require("./lib/openTabs.js");
 var Downloader = require("./lib/downloader.js").Downloader;
@@ -69,22 +70,25 @@ function onPageLoad(worker) {
     // PageMod handler
     console.log("Entering onPageLoad");
     var downloaded = false;
-    worker.port.emit("injectUi");
+    worker.port.emit("injectUi", {
+        prefs: {
+            autoFullscreen: prefs.showFullscreenOnLoad
+        }
+    });
     worker.port.on("gotDownload", handleGotDownload);
     worker.port.on("checkIfDownloaded", handleCheckIfDownloaded);
     worker.port.on("showFolder", showFolderInExplorerFromInfo);
     worker.port.on("getDownloadRootSet", function () {
         worker.port.emit("gotDownloadRootSet", !!getDownloadRoot());
     });
-    worker.port.on("gotSubmissionList", openAllInTabs)
+    worker.port.on("openAllInTabs", openAllInTabs)
   
     worker.tab.on("activate", enableButton);
     worker.tab.on("deactivate", disableButton);
-    worker.tab.on("close", function () {
-        if (worker.tab === tabs.activeTab) {
-            disableButton();
-        }
-    });
+    worker.tab.on("close", onTabClose);
+
+    ////////////
+    // Button UI
 
     if (worker.tab === tabs.activeTab) {
         enableButton();
@@ -93,7 +97,13 @@ function onPageLoad(worker) {
     if (prefs.showFullscreenOnLoad) {
         worker.port.emit("showFullscreen");
     }
-  
+    
+    function onTabClose() {
+        if (worker.tab === tabs.activeTab) {
+            disableButton();
+        }
+    }
+
     function handleButtonClick(state) { 
         if (worker.tab === tabs.activeTab) {
             // TODO: handle non-submission pages appropriately.
@@ -136,6 +146,46 @@ function onPageLoad(worker) {
         button.badge = "\u2716"; // multiplication x
         button.badgeColor = "#ff0000";
     }
+
+    //////////
+    // Hotkeys
+
+    // TODO: respond to preference updates dynamically (probably need general state tracking object first)
+    if (prefs.hotkeysEnabled) {
+        var downloadHotkey = Hotkey({
+            combo: prefs.hotkeyDownload,
+            onPress: handleButtonClick
+        });
+
+        var openInTabsHotkey = Hotkey({
+            combo: prefs.hotkeyOpenInTabs,
+            onPress: function() {
+                if (worker.tab === tabs.activeTab) {
+                    worker.port.emit("beginOpenAllInTabs");
+                }
+            }
+        });
+
+        var fullscreenHotkey = Hotkey({
+            combo: prefs.hotkeyToggleFullscreen,
+            onPress: function() {
+                if (worker.tab === tabs.activeTab) {
+                    worker.port.emit("toggleFullcreen");
+                }
+            }
+        });
+
+        function destroyHotkeys() {
+            openInTabsHotkey.destroy();
+            downloadHotkey.destroy();
+            fullscreenHotkey.destroy();
+        }
+
+        worker.tab.on("close", destroyHotkeys);
+    }
+
+    ///////////////////
+    // Message handlers
   
     function openAllInTabs(data) {
         let list = data.list;

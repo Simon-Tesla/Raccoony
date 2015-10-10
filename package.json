@@ -15,20 +15,20 @@
   "preferences": [
     {
       "name": "downloadFolder",
-      "title": "Download Folder",
+      "title": "Download folder",
       "description": "The folder where Raccoony will download art",
       "type": "directory"
     },
     {
       "name": "tabLoadDelay",
-      "title": "Open all delay",
+      "title": "Open all in tabs delay",
       "description": "The delay for loading each submission when opening all submissions in tabs, in seconds.",
       "type": "integer",
       "value": 1
     },
     {
       "name": "tabLoadOrder",
-      "title": "Open all order",
+      "title": "Open all in tabs order",
       "description": "The order tabs will be opened in, if Raccoony does not detect an explicit sorting order. Sorting by date requires incremental submission IDs and is not guaranteed to work.",
       "type": "menulist",
       "value": "D-A",
@@ -53,10 +53,33 @@
     },
     {
       "name": "showFullscreenOnLoad",
-      "title": "Show fullscreen on load",
-      "description": "Shows the image in fullscreen mode whenever a submission page loads.",
+      "title": "Show fullscreen on page load",
       "type": "bool",
       "value": false
+    },
+    {
+      "name": "hotkeysEnabled",
+      "title": "Enable hotkeys",
+      "type": "bool",
+      "value": false
+    },
+    {
+      "name": "hotkeyDownload",
+      "title": "Download hotkey",
+      "type": "string",
+      "value": "accel-f1"
+    },
+    {
+      "name": "hotkeyOpenInTabs",
+      "title": "Open in Tabs hotkey",
+      "type": "string",
+      "value": "accel-f2"
+    },
+    {
+      "name": "hotkeyToggleFullscreen",
+      "title": "Toggle fullscreen hotkey",
+      "type": "string",
+      "value": "accel-f3"
     }
   ]
 }

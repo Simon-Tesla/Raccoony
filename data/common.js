@@ -68,6 +68,7 @@ function getSubmissionListResponderFn(emitEventName) {
     };
 }
 self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionList"));
+self.port.on("beginOpenAllInTabs", getSubmissionListResponderFn("openAllInTabs"));
 
 (function () {
     var _ui = {};
@@ -80,7 +81,7 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
         return document.getElementById(_n(id));
     }
 
-    function injectUi() {
+    function injectUi(initProps) {
         //TODO: refactor the UI bits to have better seperation of concerns, possibly some lightweight MVVM/MVC pattern.
         //TODO: is there a better way to do templates? :P
         //TODO: refactor to use Zepto more, especially for hiding/showing UI.
@@ -149,6 +150,14 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
             openFullscreenPreview();
         });
         self.port.on("showFullscreen", openFullscreenPreview);
+        self.port.on("toggleFullcreen", function () {
+            let instance = $.magnificPopup.instance;
+            if (instance.currItem) {
+                instance.close();
+            } else {
+                openFullscreenPreview();
+            }
+        })
 
         function openFullscreenPreview() {
             getSubmissionMetadataCached().then(function (info) {
@@ -178,7 +187,7 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
         });
 
         _el("open-all").addEventListener("click", function (ev) {
-            getSubmissionListResponderFn("gotSubmissionList")();
+            getSubmissionListResponderFn("openAllInTabs")();
             hideElt(_ui.tools);
         });
         
@@ -200,10 +209,9 @@ self.port.on("getSubmissionList", getSubmissionListResponderFn("gotSubmissionLis
         });
         
         window.addEventListener("wheel", function (ev) {
-            if (ev.deltaY > 0 && $.magnificPopup.instance) {
+            if (ev.deltaY > 0) {
                 $.magnificPopup.instance.close();
-            } else if (window.scrollY === 0) {
-                // TODO: make this respect the configuration
+            } else if (window.scrollY === 0 && initProps.prefs.autoFullscreen) {
                 openFullscreenPreview();
             }
         });
