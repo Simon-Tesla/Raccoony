@@ -83,9 +83,9 @@
                 let $filesArea = $('#files_area');
                 if ($filesArea.length > 0) {
                     // Submissions only have submission lists if there is a files_area element somewhere,
-                    // in which case they are inside the element immediately after that element.
+                    // in which case they are inside the element containing that element.
                     // TODO: if we want to be excruciatingly correct about this, we'd also omit the link to the current submission.
-                    $links = $(".widget_imageFromSubmission a", $filesArea.next());
+                    $links = $(".widget_imageFromSubmission a", $filesArea.parent());
                 } else {
                     reject();
                 }
