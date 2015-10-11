@@ -1,5 +1,5 @@
 #Raccoony!
-A Firefox Addon that adds shiny new features (like automatic downloading) to art sites. 
+A Firefox addon that adds shiny new features (like automatic downloading) to art sites. Inspired by the [FurAffinity Extender](https://andrewneo.github.io/faextender/) and [Inkbunny Downloader](http://www.humbird0.com/#/addons/inkbunny_downloader) Firefox addons.
 
 ##Features
  * Download any submission from a supported art site to your computer with a single click.
