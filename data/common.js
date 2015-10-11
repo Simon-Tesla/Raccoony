@@ -104,10 +104,10 @@ self.port.on("beginOpenAllInTabs", getSubmissionListResponderFn("openAllInTabs")
                     '<div class="' + _n("nodownload") + '"><div class="rc-icon">&#x26A0;</div> The download folder for Raccoony is not set up! <br/><button id="' + _n('open-prefs') + '" class="' + _n("action") + '"><span>&#x2699;</span> Set up Raccoony</button></div>' +
                     '<div class="' + _n("reqdownload") + '">' +
                         '<button id="' + _n("download") + '" class="' + _n("action") + '"><span>&#x25BC;</span> Download</button>' +
-                        '<button id="' + _n("open-folder") + '" class="' + _n("action") + '"><span>&#x1f4c2;</span> Open folder</button> ' +
-                        '<button id="' + _n("fullscreen") + '" class="' + _n("action") + '" style="display:none"><span>&#x1F50E;</span> Fullscreen</button> ' +
-                        '<button id="' + _n("close-fullscreen") + '" class="' + _n("action") + '" style="display:none"><span>&#x2716;</span> Exit fullscreen</button> ' +
-                        '<button id="' + _n("open-all") + '" class="' + _n("action") + '"><span>&#x27A5;</span> Open all in tabs</button> ' +
+                        '<button id="' + _n("open-folder") + '" class="' + _n("action") + '"><span>&#x1f4c2;</span> Open folder</button>' +
+                        '<button id="' + _n("fullscreen") + '" class="' + _n("action") + '" style="display:none"><span>&#x1F50E;</span> Fullscreen</button>' +
+                        '<button id="' + _n("close-fullscreen") + '" class="' + _n("action") + '" style="display:none"><span>&#x2716;</span> Exit fullscreen</button>' +
+                        '<button id="' + _n("open-all") + '" class="' + _n("action") + '"><span>&#x27A5;</span> Open all in tabs</button>' +
                     '</div>' +
                 '</div>' +
             '</div>';

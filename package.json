@@ -24,7 +24,7 @@
       "title": "Open all in tabs delay",
       "description": "The delay for loading each submission when opening all submissions in tabs, in seconds.",
       "type": "integer",
-      "value": 1
+      "value": 2
     },
     {
       "name": "tabLoadOrder",
