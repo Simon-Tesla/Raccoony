@@ -12,6 +12,11 @@
     background-color: transparent;
 }
 
+#ry-ui .ry-hide, 
+#ry-ui.ry-hide {
+    display: none;
+}
+
 #ry-ui:hover,
 #ry-ui.active {
     opacity: 1;

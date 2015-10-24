@@ -25,7 +25,7 @@
                 case KeyboardEvent.DOM_VK_D:
                     handlers.download();
                     break;
-                case KeyboardEvent.DOM_VK_R:
+                case KeyboardEvent.DOM_VK_F:
                     handlers.showFolder();
                     break;
                 case KeyboardEvent.DOM_VK_O:

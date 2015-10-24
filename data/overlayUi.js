@@ -48,7 +48,7 @@
                 `</div>` +
             `</div>`;
 
-        var main = ui.main = $('<div />', { id: n('ui') });
+        var main = ui.main = $('<div />', { id: n('ui'), 'class': n("hide") });
         main.html(html);
         main.appendTo(document.body);
         ui.progress = el('dl-progress');
@@ -73,6 +73,7 @@
         });
         page.hasSubmission().then(function (hasSubmission) {
             if (hasSubmission) {
+                ui.main.removeClass(n('hide'));
                 el('download').show();
                 el('open-folder').show();
                 el('fullscreen').show();
@@ -80,6 +81,7 @@
         });
         page.hasSubmissionList().then(function (hasList) {
             if (hasList) {
+                ui.main.removeClass(n('hide'));
                 el('open-all').show();
             }
         })
