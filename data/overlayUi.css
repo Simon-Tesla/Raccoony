@@ -1,4 +1,4 @@
-#raccoony-ui {
+﻿#ry-ui {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -12,44 +12,18 @@
     background-color: transparent;
 }
 
-#raccoony-ui:hover,
-#raccoony-ui.active {
+#ry-ui:hover,
+#ry-ui.active {
     opacity: 1;
 }
 
-@keyframes raccoony-fadein-anim {
-    from {opacity: 0; }
-    to { opacity: 1; }
-}
 
-@keyframes raccoony-fadeout-anim {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-#raccoony-ui .raccoony-hide,
-#raccoony-ui.raccoony-hide {
-    display: none;
-}
-
-/* TODO use Zepto's hide/show mechanism instead */
-#raccoony-ui .raccoony-begin-hide,
-#raccoony-ui.raccoony-begin-hide {
-    animation: raccoony-fadeout-anim .3s;
-}
-
-#raccoony-ui .raccoony-show,
-#raccoony-ui.raccoony-show {
-    animation: raccoony-fadein-anim .3s;
-    display: block;
-}
-
-#raccoony-ui a {
+#ry-ui a {
     text-decoration: none !important;
     border-bottom: none;
 }
 
-#raccoony-ui .raccoony-action {
+#ry-ui .ry-action {
     display: inline-block;
     color: #fff !important;
     border: 2px solid #004578;
@@ -66,25 +40,33 @@
     cursor: default;
 }
 
-#raccoony-ui .raccoony-action:hover {
+#ry-ui .ry-action.ry-nolabel {
+    min-width: 0;
+}
+
+#ry-ui .ry-action:hover {
     background-color: #0081e0;
 }
 
-#raccoony-ui .raccoony-action:disabled,
-#raccoony-ui .raccoony-action:hover:disabled {
+#ry-ui .ry-action:disabled,
+#ry-ui .ry-action:hover:disabled {
     background-color: #ddd;
     color: #666 !important;
     border-color: #666;
 }
 
-#raccoony-ui .raccoony-action span {
+#ry-ui .ry-action span {
     display: inline-block;
     font-size: 16px;
     vertical-align: center;
-    margin-left: 4px;
+    margin-right: 4px;
 }
 
-#raccoony-ui #raccoony-close {
+#ry-ui .ry-action.ry-nolabel span {
+    margin-right: 0;
+}
+
+#ry-ui #ry-close {
     position: absolute;
     display: block;
     left: 0;
@@ -107,25 +89,25 @@
     transition: opacity .4s;
     background-color: rgba(0, 0, 0, .5);
 }
-#raccoony-ui:hover #raccoony-close {
+#ry-ui:hover #ry-close {
     opacity: .5;
 }
 
-#raccoony-ui #raccoony-close:hover {
+#ry-ui #ry-close:hover {
     opacity: 1;
 }
 
-#raccoony-ctr, 
-#raccoony-img {
+#ry-ctr, 
+#ry-img {
     display: inline-block;
     vertical-align: bottom;
 }
 
-#raccoony-dl-progress {
+#ry-dl-progress {
     width: 100%;
 }
 
-.raccoony-bubble {
+.ry-bubble {
     color: #000;
     background-color: #ddd;
     border-radius: 5px;
@@ -137,7 +119,7 @@
     margin-left: 15px;
 }
 
-.raccoony-bubble::before {
+.ry-bubble::before {
     content: "";
     width: 0px;
     height: 0px;
@@ -150,32 +132,24 @@
     border-right: 10px solid #ddd;
 }
 
-.raccoony-nodownload,
-.raccoony-need-dl-setup .raccoony-reqdownload {
-    display: none;
-}
-.raccoony-need-dl-setup .raccoony-nodownload {
+#ry-nodownload {
     display: block;
-    margin-right: .5em;
     color: #600;
-    max-width: 400px;
-}
-.raccoony-nodownload .rc-icon {
-    float: left;
-    font-size: 32px;
-    margin-right: 10px;
+    vertical-align: center;
+
+    border-bottom: 1px solid #000;
+    margin: 4px;
+    padding-bottom: 4px;
 }
 
-#raccoony-ui #raccoony-download,
-#raccoony-ui #raccoony-open-folder,
-#raccoony-ui #raccoony-fullscreen,
-#raccoony-ui #raccoony-open-all {
-    display: none;
-}
-
-#raccoony-ui .raccoony-hassub #raccoony-download,
-#raccoony-ui .raccoony-hassub #raccoony-open-folder,
-#raccoony-ui .raccoony-hassub #raccoony-fullscreen,
-#raccoony-ui .raccoony-haslist #raccoony-open-all {
+#ry-nodownload span {
     display: inline-block;
+}
+
+#ry-nodownload .ry-msg {
+    margin: 4px;
+}
+
+#ry-nodownload .ry-icon {
+    font-size: 20px;
 }

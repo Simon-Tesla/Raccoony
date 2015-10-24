@@ -62,24 +62,6 @@
       "title": "Enable hotkeys",
       "type": "bool",
       "value": false
-    },
-    {
-      "name": "hotkeyDownload",
-      "title": "Download hotkey",
-      "type": "string",
-      "value": "accel-f1"
-    },
-    {
-      "name": "hotkeyOpenInTabs",
-      "title": "Open in Tabs hotkey",
-      "type": "string",
-      "value": "accel-f2"
-    },
-    {
-      "name": "hotkeyToggleFullscreen",
-      "title": "Toggle fullscreen hotkey",
-      "type": "string",
-      "value": "accel-f3"
     }
   ]
 }

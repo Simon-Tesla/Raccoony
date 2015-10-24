@@ -30,8 +30,18 @@ function openPreferencesPane() {
 /////////////////////////
 // Page Mod declarations
 
-var commonScript = ["./zepto.js", "./magnific.js", "./common.js"];
-var commonCss = ["./magnific.css", "./pageUi.css"];
+var commonScript = [
+    "./zepto.js", 
+    "./magnific.js", 
+    "./fileTypes.js", 
+    "./page.js", 
+    "./hotkeys.js", 
+    "./overlayUi.js" 
+];
+var commonCss = [
+    "./magnific.css", 
+    "./overlayUi.css"
+];
 
 pageMod.PageMod({
     include: "https://www.weasyl.com/*",
@@ -79,8 +89,10 @@ function onPageLoad(worker) {
     var downloaded = false;
     worker.port.emit("injectUi", {
         prefs: {
-            autoFullscreen: prefs.showFullscreenOnLoad
+            autoFullscreen: prefs.showFullscreenOnLoad,
+            hotkeysEnabled: prefs.hotkeysEnabled
         },
+        needDownloadSetup: !getDownloadRoot(),
         dataPath: self.data.url("")
     });
 
@@ -116,6 +128,7 @@ function onPageLoad(worker) {
 
     function handleButtonClick(state) { 
         if (worker.tab === tabs.activeTab) {
+            console.log("Handled button click", downloaded, worker.tab.url);
             // TODO: handle non-submission pages appropriately.
             if (!downloaded) {
                 worker.port.emit("getDownload");
@@ -127,6 +140,7 @@ function onPageLoad(worker) {
   
     function enableButton() {
         // Enable the button if we're on a supported page.
+        console.log("Enabled dl button", worker.tab.url);
         button.on("click", handleButtonClick);
         button.disabled = false;
         worker.port.emit("beginCheckIfDownloaded");
@@ -134,6 +148,7 @@ function onPageLoad(worker) {
 
     function disableButton() {
         // Disable the button whenever we switch away from this tab.
+        console.log("Disabled dl button", worker.tab.url);
         button.badge = null;
         button.disabled = true;
         button.removeListener("click", handleButtonClick);
@@ -141,6 +156,7 @@ function onPageLoad(worker) {
   
     function updateDownloadedState(isDownloaded) {
         downloaded = isDownloaded;
+        console.log("Changed dl button state", downloaded, worker.tab.url);
         if (isDownloaded) {
             button.badge = "\u2713"; // check mark
             button.badgeColor = "#666666";
@@ -153,45 +169,9 @@ function onPageLoad(worker) {
   
     function showErrorBadge() {
         // Show the error state in the toolbar.
+        console.log("Dl button error state", worker.tab.url);
         button.badge = "\u2716"; // multiplication x
         button.badgeColor = "#ff0000";
-    }
-
-    //////////
-    // Hotkeys
-
-    // TODO: respond to preference updates dynamically (probably need general state tracking object first)
-    if (prefs.hotkeysEnabled) {
-        var downloadHotkey = Hotkey({
-            combo: prefs.hotkeyDownload,
-            onPress: handleButtonClick
-        });
-
-        var openInTabsHotkey = Hotkey({
-            combo: prefs.hotkeyOpenInTabs,
-            onPress: function() {
-                if (worker.tab === tabs.activeTab) {
-                    worker.port.emit("beginOpenAllInTabs");
-                }
-            }
-        });
-
-        var fullscreenHotkey = Hotkey({
-            combo: prefs.hotkeyToggleFullscreen,
-            onPress: function() {
-                if (worker.tab === tabs.activeTab) {
-                    worker.port.emit("toggleFullcreen");
-                }
-            }
-        });
-
-        function destroyHotkeys() {
-            openInTabsHotkey.destroy();
-            downloadHotkey.destroy();
-            fullscreenHotkey.destroy();
-        }
-
-        worker.tab.on("close", destroyHotkeys);
     }
 
     ///////////////////
