@@ -32,6 +32,16 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+ * 0.0.13
+    - Changed hotkey handling mechanism to better allow for single-key hotkeys. Removed the hotkey customization preferences as a result of this (hopefully temporarily). 
+    - Updated the hotkey mappings. Hotkeys are now:
+        - D - Download
+        - F - Open Folder
+        - O - Open/close fullscreen
+        - T - Open all in tabs
+    - Updated the first-run experience UI.
+    - Added a configuration button that takes the user to the preferences page.
+    - Completely refactored the UI overlay code to be more modular.
  * 0.0.12
     - Fixed a bug with scraping multi-image submissions in InkBunny.
     - Improved first run experience for users who don't have a download folder set.
