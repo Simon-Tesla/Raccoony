@@ -20,6 +20,7 @@ free to suggest more.
  * Weasyl
  * SoFurry
  * deviantArt
+ * FurryNetwork (experimental/partial)
 
 The architecture of the addon makes it very easy to add support for more sites, 
 so if you see one not on the list, feel free to suggest or write your own plugin
@@ -32,6 +33,12 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+ * 0.0.14
+    - Added experimental support for FurryNetwork (downloading only).
+    - Added always-visible badges to the page overlay for downloading and opening in tabs.
+    - Improved perfomrance of on-screen preview by always preferring the cached version of an image to load. (Hoping to add a zoom-in to download feature in the future.)
+    - Fixed an issue with hotkeys triggering when typing inside contentEditable fields (like comment fields on deviantArt).
+    - Fixed bug where trying to start a download before another one had finished would cause an error.
  * 0.0.13
     - Changed hotkey handling mechanism to better allow for single-key hotkeys. Removed the hotkey customization preferences as a result of this (hopefully temporarily). 
     - Updated the hotkey mappings. Hotkeys are now:
