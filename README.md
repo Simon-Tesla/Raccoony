@@ -33,6 +33,8 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+ * 0.0.15
+    - Fixed bug with hotkeys not working.
  * 0.0.14
     - Added experimental support for FurryNetwork (downloading only).
     - Added always-visible badges to the page overlay for downloading and opening in tabs.

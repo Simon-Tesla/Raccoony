@@ -16,7 +16,7 @@
         if (el && (
             el.tagName.toLowerCase() == 'input' ||
             el.tagName.toLowerCase() == 'textarea' ||
-            $(el).closest('[contenteditable=true]'))) {
+            $(el).closest('[contenteditable=true]').length > 0)) {
             return true;  
         }
 
