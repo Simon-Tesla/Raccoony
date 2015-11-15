@@ -1,20 +1,24 @@
 ﻿(function () {
     let page = new Page(site);
     let ui = {};
+    let initProps = {};
 
-    page.on(Page.Events.injectUi, function (initProps) {
+    page.on(Page.Events.injectUi, function (props) {
+        initProps = props;
+
         if (initProps.prefs.hotkeysEnabled) {
             hotkeys.init(page);
         }
-        renderUi(initProps);
-        addPageEventHandlers(initProps);
-        addUiEventHandlers(initProps);
+        renderUi();
+        updateUiToPageState();
+        addPageEventHandlers();
+        addUiEventHandlers();
     });
 
     function n(name) {
         return 'ry-' + name;
     }
-    
+
     function el(name) {
         return $('#' + n(name));
     }
@@ -23,11 +27,15 @@
         return el.css('display') !== 'none' && el.css('opacity') !== 0;
     }
 
-    function renderUi(initProps) {
+    function renderUi() {
         // Render the UI on the page.
         let logoUrl = initProps.dataPath + "icon-64.png";
-        let html = `<a id="${n("close")}" title="Hide Raccoony">&#x2716;</a>` +
+        let html = `<a id="${n("close")}" class="${n("circlebtn")}" title="Hide Raccoony">&#x2716;</a>` +
             `<a id="${n("imglink")}" title="Raccoony - click for page options"><img src="${logoUrl}" id="${n("img")}" /></a>` +
+            `<div id="${n('badges')}">` +
+                `<a id="${n('tabs')}" class="${n("circlebtn")}" style="display:none" title="Open all in Tabs (Hotkey: T)">&#x29C9;</a>` +
+                `<a id="${n('dl')}" class="${n("circlebtn")}" style="display:none" title="Download (Hotkey: D)">&#x25BC;</a>` +
+            `</div>` +
             `<div id="${n("ctr")}">` +
                 `<div id="${n("notify")}" class="${n("bubble")}" style="display:none">` +
                     `<div id="${n("message")}"></div>` +
@@ -43,7 +51,7 @@
                     `<button id="${n("open-folder")}" class="${n("action")}" title="Hotkey: R" style="display:none"><span>&#x1f4c2; </span> Open folder</button>` +
                     `<button id="${n("fullscreen")}" class="${n("action")}" title="Hotkey: O" style="display:none"><span>&#x1F50E;</span> Fullscreen</button>` +
                     `<button id="${n("close-fullscreen")}" class="${n("action")}" title="Hotkey: O" style="display:none"><span>&#x2716;</span> Exit fullscreen</button>` +
-                    `<button id="${n("open-all")}" class="${n("action")}" title="Hotkey: T" style="display:none"><span>&#x27A5;</span> Open all in tabs</button>` +
+                    `<button id="${n("open-all")}" class="${n("action")}" title="Hotkey: T" style="display:none"><span>&#x29C9;</span> Open all in tabs</button>` +
                     `<button id="${n('configure')}" class ="${n("action")} ${n('nolabel')}" title="Configure Raccoony"><span>&#x2699;</span></button>` +
                 `</div>` +
             `</div>`;
@@ -59,7 +67,7 @@
         ui.tools = el('tools');
     }
 
-    function addPageEventHandlers(initProps) {
+    function updateUiToPageState() {
         // Adjust UI to match page state.
         page.isDownloaded().then(function (isDownloaded) {
             if (isDownloaded) {
@@ -77,15 +85,19 @@
                 el('download').show();
                 el('open-folder').show();
                 el('fullscreen').show();
+                el('dl').show();
             }
         });
         page.hasSubmissionList().then(function (hasList) {
             if (hasList) {
                 ui.main.removeClass(n('hide'));
                 el('open-all').show();
+                el('tabs').show();
             }
         })
+    }
 
+    function addPageEventHandlers() {
         // Handle Page events
         page.on(Page.Events.downloadStart, function () {
             ui.tools.hide();
@@ -142,6 +154,9 @@
         el('download')
             .html('<span>&#x2713;</span> File exists')
             .prop('disabled', true);
+        el('dl')
+            .html('&#x2713;')
+            .addClass(n('exists'));
     }
 
     function hideProgressDelay() {
@@ -152,7 +167,7 @@
         }, 5000);
     }
 
-    function addUiEventHandlers(initProps) {
+    function addUiEventHandlers() {
         // Initiate page actions based on UI events.
 
         ui.close.click(function (ev) {
@@ -178,17 +193,9 @@
             page.openPrefs();
         });
 
-        el('download').click(function (ev) {
-            console.log("Clicked download.");
-            page.download();
-            ui.tools.hide();
-        });
+        el('download').click(onClickDownload);
 
-        el('open-folder').click(function (ev) {
-            console.log("Clicked open folder.");
-            page.showFolder();
-            ui.tools.fadeOut();
-        });
+        el('open-folder').click(onClickOpenFolder);
 
         el('fullscreen').click(function (ev) {
             page.showFullscreen();
@@ -200,16 +207,43 @@
             ui.tools.fadeOut();
         });
 
-        el('open-all').click(function (ev) {
-            console.log("Clicked open all.");
-            page.openAllInTabs();
-            ui.tools.fadeOut();
-        });
+        el('open-all').click(onClickOpenAll);
+        el('tabs').click(onClickOpenAll);
 
         el('dl-open').click(function (ev) {
             page.showFolder();
             ui.notify.fadeOut();
-        })
+        });
+
+        el('dl').click(onClickDownloadBadge);
+
+        function onClickOpenAll(ev) {
+            console.log("Clicked open all.");
+            page.openAllInTabs();
+            ui.tools.fadeOut();
+        }
+
+        function onClickDownloadBadge(ev) {
+            page.isDownloaded().then(function (isDownloaded) {
+                if (isDownloaded) {
+                    onClickOpenFolder(ev);
+                } else {
+                    onClickDownload(ev);
+                }
+            });
+        }
+
+        function onClickDownload(ev) {
+            console.log("Clicked download.");
+            page.download();
+            ui.tools.hide();
+        }
+
+        function onClickOpenFolder(ev) {
+            console.log("Clicked open folder.");
+            page.showFolder();
+            ui.tools.fadeOut();
+        }
 
         // Hide tools when mousing away for more than a second
         let mouseLeaveTimeout = null;

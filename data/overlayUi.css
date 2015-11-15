@@ -71,11 +71,8 @@
     margin-right: 0;
 }
 
-#ry-ui #ry-close {
-    position: absolute;
+#ry-ui .ry-circlebtn {
     display: block;
-    left: 0;
-    bottom: 44px;
     color: #fff;
     width: 16px;
     height: 16px;
@@ -85,15 +82,40 @@
     text-align: center;
     font-size: 10px;
     text-decoration: none;
-    background-color: transparent;
-    margin: 0;
+    margin: 2px 0 0 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     cursor: pointer;
-    opacity: 0;
-    transition: opacity .4s;
     background-color: rgba(0, 0, 0, .5);
 }
+
+#ry-ui #ry-badges {
+    position: absolute;
+    left:0;
+    bottom: 0;
+}
+
+#ry-ui #ry-tabs {
+    background: rgba(0, 69, 120, 1);
+}
+
+#ry-ui #ry-dl {
+    background: rgba(0, 153, 0, 1);
+}
+
+#ry-ui #ry-dl.ry-exists {
+    background: rgba(0, 0, 0, .5);
+}
+
+#ry-ui #ry-close {
+    position: absolute;
+    left: 0;
+    bottom: 44px;
+    opacity: 0;
+    transition: opacity .4s;
+}
+
+
 #ry-ui:hover #ry-close {
     opacity: .5;
 }
@@ -106,6 +128,10 @@
 #ry-img {
     display: inline-block;
     vertical-align: bottom;
+}
+
+#ry-imglink {
+    margin-left:10px;
 }
 
 #ry-dl-progress {

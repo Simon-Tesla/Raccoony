@@ -4,13 +4,25 @@
         // TODO: Is there a deviantArt API?
         return new Promise(function (resolve, reject) {
             try {
-                let url, username, filename, id, ext;
+                let url, username, filename, id, ext, previewUrl;
                 // Get the username
                 var usernameElt = document.querySelector(".dev-title-container .username");
                 username = usernameElt.textContent;
 
                 // Get the download button
                 let button = document.querySelector("a.dev-page-download");
+
+                // Get the displayed image.
+                // dA image URLs look like so:
+                // http://img12.deviantart.net/64ca/i/2015/273/f/9/[filename]_by_[user]-d9bi7fp.jpg
+                // Or it can also look like this:
+                // http://orig15.deviantart.net/412a/f/2015/277/4/1/41dc9b8a50185effd6956ef62b506458-d9bxb8s.png
+
+                let img = document.querySelector("img.dev-content-full");
+                if (!img) {
+                    img = document.querySelector("img.dev-content-normal");
+                }
+                previewUrl = img.src;
 
                 if (button) {
                     // Get the download button URL
@@ -34,16 +46,7 @@
 
                 } else {
                     // The deviant disabled the download button, so let's just grab the url from the image.
-                    // dA image URLs look like so:
-                    // http://img12.deviantart.net/64ca/i/2015/273/f/9/[filename]_by_[user]-d9bi7fp.jpg
-                    // Or it can also look like this:
-                    // http://orig15.deviantart.net/412a/f/2015/277/4/1/41dc9b8a50185effd6956ef62b506458-d9bxb8s.png
-
-                    let img = document.querySelector("img.dev-content-full");
-                    if (!img) {
-                        img = document.querySelector("img.dev-content-normal");
-                    }
-                    url = img.src;
+                    url = previewUrl;
 
                     // De-munge the filename.
                     filename = url.split("/").pop();
@@ -68,6 +71,7 @@
 
                 resolve({
                     url: url,
+                    previewUrl: previewUrl,
                     user: username,
                     filename: filename,
                     extension: ext,

@@ -162,6 +162,7 @@
                 if (!isDownloaded) {
                     _this._metadataResponderFnFactory("gotDownload")();
                 }
+                //TODO: show something if already downloaded
             });
         },
         showFolder: function () {
@@ -184,10 +185,11 @@
 
             let _this = this;
             return _this.getSubmissionMetadata().then(function (info) {
-                if (info.url && info.type === "image") {
+                url = info.previewUrl || info.url;
+                if (url && info.type === "image") {
                     $.magnificPopup.open({
                         items: {
-                            src: info.url
+                            src: url
                         },
                         type: 'image',
                         callbacks: {

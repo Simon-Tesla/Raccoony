@@ -83,10 +83,19 @@ pageMod.PageMod({
     contentScriptWhen: "end" //DeviantArt renders its UI dynamically, so the DOM can't be scraped at onReady time.
 });
 
+pageMod.PageMod({
+    include: "https://beta.furrynetwork.com/*", 
+    contentScriptFile: ["./plugins/furrynetwork.js"].concat(commonScript),
+    contentStyleFile: commonCss,
+    onAttach: onPageLoad,
+    contentScriptWhen: "end"
+});
+
 function onPageLoad(worker) {
     // PageMod handler
     console.log("Entering onPageLoad");
-    var downloaded = false;
+    let downloaded = false;
+    let downloading = false;
     worker.port.emit("injectUi", {
         prefs: {
             autoFullscreen: prefs.showFullscreenOnLoad,
@@ -200,6 +209,11 @@ function onPageLoad(worker) {
   
     function handleGotDownload(info) {
         // Handler for the gotDownload message
+        if (downloading) {
+            console.log("Already downloading", info);
+            return;
+        }
+        downloading = true;
         console.log("handleGotDownload", info);
         let downloader = new Downloader(getDownloadRoot());
         downloader.download(info, function () {
@@ -214,10 +228,12 @@ function onPageLoad(worker) {
             console.log("onDownloadFinished");
             updateDownloadedState(true);
             worker.port.emit("downloadComplete");
+            downloading = false;
         }, function (error) {
             console.log("onDownloadError", error);
             showErrorBadge();
             worker.port.emit("downloadError", error);
+            downloading = false;
         });
     }
   

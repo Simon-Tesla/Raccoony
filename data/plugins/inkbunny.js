@@ -19,9 +19,14 @@
                 reject();
             }
 
+            // Get the URL for the image currently on the page.
+            var image = document.querySelector(".widget_imageFromSubmission img");
+            var previewUrl = image.src;
+
             // Get the max preview button, if it exists
             var button = document.querySelector("#size_container a[target=_blank]");
             var url;
+
             if (button) {
                 // Get the url off of the button.
                 // https://us.ib.metapix.net/files/full/XX/[ID]_[username]_[filename].[ext]
@@ -29,8 +34,7 @@
             } else {
                 // Go for the URL of the image itself if it doesn't.
                 // https://us.ib.metapix.net/files/screen/XX/[ID]_[username]_[filename].[ext]
-                var image = document.querySelector(".widget_imageFromSubmission img");
-                url = image.src;
+                url = previewUrl;
             }
 
             // Get the filename, submission ID and username from the URL
@@ -54,6 +58,7 @@
 
             resolve({
                 url: url,
+                previewUrl: previewUrl,
                 user: username,
                 filename: filename,
                 submissionId: id,

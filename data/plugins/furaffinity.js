@@ -28,6 +28,7 @@
 
             resolve({
                 url: url,
+                previewUrl: url,
                 user: username,
                 filename: filename,
                 extension: ext,

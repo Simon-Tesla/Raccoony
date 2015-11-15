@@ -31,9 +31,12 @@
             let ext = filename.substring(extIndex + 1);
             filename = filename.substring(0, extIndex);
 
+            let previewImg = document.querySelector('#detail-art img');
+            let previewUrl = previewImg.src;
 
             resolve({
                 url: url,
+                previewUrl: previewUrl,
                 user: username,
                 filename: filename,
                 extension: ext,

@@ -13,7 +13,10 @@
     function handleKeypress(ev) {
         let el = document.activeElement;
         // if in textfield, do nothing
-        if (el && (el.tagName.toLowerCase() == 'input' || el.tagName.toLowerCase() == 'textarea')) {
+        if (el && (
+            el.tagName.toLowerCase() == 'input' ||
+            el.tagName.toLowerCase() == 'textarea' ||
+            $(el).closest('[contenteditable=true]'))) {
             return true;  
         }
 

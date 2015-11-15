@@ -17,6 +17,7 @@
             // And the extension - we use the preview image to determine this.
             var imgPreview = document.querySelector("#sfContentImage img");
             var ext = imgPreview.getAttribute("src").split('.').pop();
+            var previewUrl = imgPreview.src;
 
             // Get the username
             var usernameElt = document.querySelector("#sf-userinfo-outer .sf-username");
@@ -24,6 +25,7 @@
 
             resolve({
                 url: url,
+                previewUrl: previewUrl,
                 user: username,
                 filename: filename,
                 extension: ext,
