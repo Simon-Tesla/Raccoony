@@ -33,7 +33,9 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
- * 0.0.15
+* 0.0.16
+    - Raccoony is now signed to comply with the new extension signing requirements. 
+* 0.0.15
     - Fixed bug with hotkeys not working.
  * 0.0.14
     - Added experimental support for FurryNetwork (downloading only).
