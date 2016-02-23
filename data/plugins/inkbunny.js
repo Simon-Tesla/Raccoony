@@ -20,7 +20,12 @@
             }
 
             // Get the URL for the image currently on the page.
-            var image = document.querySelector("#magicbox");
+            var image = document.getElementById("magicbox");
+            if (!image) {
+                // Inkbunny seems to display images in a couple of different modes, so fallback to this if
+                // #magicbox doesn't exist.
+                image = document.querySelector(".magicboxParent .widget_imageFromSubmission img");
+            }
             var previewUrl = image.src;
 
             // Get the max preview button, if it exists

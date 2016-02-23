@@ -33,7 +33,7 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
-* 0.0.17
+* 0.0.17 & 0.0.18
 	- Updated to work with new InkBunny layout.
 * 0.0.16
     - Raccoony is now signed to comply with the new extension signing requirements. 
