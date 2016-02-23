@@ -20,7 +20,7 @@
             }
 
             // Get the URL for the image currently on the page.
-            var image = document.querySelector(".widget_imageFromSubmission img");
+            var image = document.querySelector("#magicbox");
             var previewUrl = image.src;
 
             // Get the max preview button, if it exists
