@@ -33,6 +33,10 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+* 0.0.19
+	- Enabled the extension to work in private-browsing mode. Note that while this extension relies on no third-party services, 
+	  should not communicate with any third parties and should therefore be safe to use with private-browsing mode, 
+	  I have not done a complete audit of the libraries I use and I cannot guarantee privacy.
 * 0.0.17 & 0.0.18
 	- Updated to work with new InkBunny layout.
 * 0.0.16
