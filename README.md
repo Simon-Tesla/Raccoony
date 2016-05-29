@@ -43,13 +43,13 @@ to see an example.
     - Raccoony is now signed to comply with the new extension signing requirements. 
 * 0.0.15
     - Fixed bug with hotkeys not working.
- * 0.0.14
+* 0.0.14
     - Added experimental support for FurryNetwork (downloading only).
     - Added always-visible badges to the page overlay for downloading and opening in tabs.
     - Improved perfomrance of on-screen preview by always preferring the cached version of an image to load. (Hoping to add a zoom-in to download feature in the future.)
     - Fixed an issue with hotkeys triggering when typing inside contentEditable fields (like comment fields on deviantArt).
     - Fixed bug where trying to start a download before another one had finished would cause an error.
- * 0.0.13
+* 0.0.13
     - Changed hotkey handling mechanism to better allow for single-key hotkeys. Removed the hotkey customization preferences as a result of this (hopefully temporarily). 
     - Updated the hotkey mappings. Hotkeys are now:
         - D - Download
@@ -59,40 +59,40 @@ to see an example.
     - Updated the first-run experience UI.
     - Added a configuration button that takes the user to the preferences page.
     - Completely refactored the UI overlay code to be more modular.
- * 0.0.12
+* 0.0.12
     - Fixed a bug with scraping multi-image submissions in InkBunny.
     - Improved first run experience for users who don't have a download folder set.
- * 0.0.11
+* 0.0.11
     - Added hotkeys for downloading (`CTRL`+`F1`), opening all in tabs (`CTRL`+`F2`), and toggling fullscreen mode (`CTRL`+`F3`). These hotkeys can be rebound in preferences, using the [instructions found here](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/hotkeys#Hotkey%28options%29).
     - Fullscreen can be dismissed by scrolling the mousewheel down. If auto-fullscreen is enabled, scrolling to the top of the page will re-enter fullscreen mode.
- * 0.0.10
+* 0.0.10
     - Skipped a few version numbers while testing out the auto-update feature. 
       If you use this version of Raccoony, it should auto-update correctly in the future.
       (At least until Firefox stops allowing unsigned addons.)
     - Removed a bunch of stuff from the XPI that shouldn't have been getting packaged with it.
- * 0.0.6
+* 0.0.6
     - Show UI on hover.
     - Minor display fixes.
     - Testing out auto-update feature.
- * 0.0.5
+* 0.0.5
     - Fixed some issues with the fullscreen preview showing on pages that aren't previewable.
     - Fixed some issues with deviantArt not showing "open in tabs", or loading the incorrect submissions.
     - Added automatic updating - your browser should pick up the next version of raccoony automatically.
- * 0.0.4
+* 0.0.4
     - Added fullscreen preview feature.
     - Added option to open the fullscreen preview immediately when opening a submission page.
     - Fixed deviantArt downloading for submissions without a download button.
     - Fixed deviantArt "open all in tabs" support on watchlist notifications page.
- * 0.0.3
+* 0.0.3
     - Enabled deviantArt support
     - Added Open in tabs feature (currently only accessible via page overlay)
     - More consistent filename normalization. Note that this breaks compatibility
       with existing filenames, so already downloaded submissions may show up as
       not downloaded.
     - Fixed a bunch of bugs and did some refactoring.
- * 0.0.2
+* 0.0.2
     - Fixed bug with saving Inkbunny submissions with multiple pages.
- * 0.0.1
+* 0.0.1
     - Initial release.
 
 ##Licence
