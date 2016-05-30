@@ -33,6 +33,8 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+* 0.0.20
+	- Fixed issue #18: open all in a private window would open everything in a new non-private window.
 * 0.0.19
 	- Enabled the extension to work in private-browsing mode. Note that while this extension relies on no third-party services, 
 	  should not communicate with any third parties and should therefore be safe to use with private-browsing mode, 

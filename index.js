@@ -6,6 +6,7 @@ var prefs = require('sdk/simple-prefs').prefs;
 var { Hotkey } = require("sdk/hotkeys");
 var {Services} = Cu.import('resource://gre/modules/Services.jsm');
 var self = require("sdk/self");
+var privateBrowsing = require("sdk/private-browsing");
 
 var openTabs = require("./lib/openTabs.js");
 var Downloader = require("./lib/downloader.js").Downloader;
@@ -189,8 +190,9 @@ function onPageLoad(worker) {
     function openAllInTabs(data) {
         let list = data.list;
         let order = data.nosort && prefs.tabLoadOrder.charAt(0) !== "P" ? "P-A" : prefs.tabLoadOrder;
+        let isPrivate = privateBrowsing.isPrivate(worker.tab);
         console.log("Opening tabs:", order, list);
-        openTabs.openAllInTabs(list, prefs.tabLoadDelay || 1, order);
+        openTabs.openAllInTabs(list, prefs.tabLoadDelay || 1, order, isPrivate);
     }
 
     function getDownloadRoot() {
