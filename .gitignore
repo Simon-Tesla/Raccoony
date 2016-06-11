@@ -47,5 +47,6 @@ Temporary Items
 *.sln
 .vs
 
+obj/
 bin/
 *.user
