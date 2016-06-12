@@ -5,6 +5,9 @@
 
     page.on(Page.Events.injectUi, function (props) {
         initProps = props;
+        if (site.noAutoFullscreen) {
+            initProps.prefs.autoFullscreen = false;
+        }
 
         if (initProps.prefs.hotkeysEnabled) {
             hotkeys.init(page);

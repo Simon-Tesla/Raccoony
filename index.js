@@ -127,7 +127,7 @@ function onPageLoad(worker) {
     }
 
     if (prefs.showFullscreenOnLoad) {
-        worker.port.emit("showFullscreen");
+        worker.port.emit("showAutoFullscreen");
     }
     
     function onTabClose() {
@@ -216,8 +216,9 @@ function onPageLoad(worker) {
             return;
         }
         downloading = true;
+        info.sourceUrl = worker.tab.url;
         console.log("handleGotDownload", info);
-        let downloader = new Downloader(getDownloadRoot());
+        let downloader = new Downloader(getDownloadRoot(), prefs.writeMetadata);
         downloader.download(info, function () {
             // onDownloadStart
             console.log("onDownloadStart");

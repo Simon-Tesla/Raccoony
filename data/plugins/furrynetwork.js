@@ -77,6 +77,7 @@
         // FurryNetwork uses a fair amount of XHR, so don't cache anything.
         nocache: true,
         reinitOnMutation: true,
-        mutationElementSelector: "#app"
+        mutationElementSelector: "#app",
+        noAutoFullscreen: true,
     };
 })();

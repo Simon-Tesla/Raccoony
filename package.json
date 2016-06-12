@@ -16,8 +16,14 @@
     {
       "name": "downloadFolder",
       "title": "Download folder",
-      "description": "The folder where Raccoony will download art",
+      "description": "The folder where Raccoony will download submissions",
       "type": "directory"
+    },
+    {
+      "name": "writeMetadata",
+      "title": "Write metadata in a text file adjacent to the downloaded file",
+      "type": "bool",
+      "value": false
     },
     {
       "name": "tabLoadDelay",

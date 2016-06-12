@@ -30,6 +30,7 @@
         self.port.on("getSubmissionList", this._listResponderFnFactory("gotSubmissionList"));
         self.port.on("beginOpenAllInTabs", $.proxy(this.openAllInTabs, this));
 
+        self.port.on("showAutoFullscreen", $.proxy(this.showAutoFullscreen, this));
         self.port.on("showFullscreen", $.proxy(this.showFullscreen, this));
         self.port.on("toggleFullcreen", $.proxy(this.toggleFullscreen, this));
 
@@ -215,6 +216,11 @@
             /// Opens all submissions in the list in new tabs.
             /// </summary>
             this._listResponderFnFactory("openAllInTabs")();
+        },
+        showAutoFullscreen: function () {
+            if (!this.site.noAutoFullscreen) {
+                this.showFullscreen();
+            }
         },
         showFullscreen: function () {
             /// <summary>

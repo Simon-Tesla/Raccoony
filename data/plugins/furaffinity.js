@@ -37,6 +37,8 @@
                     description = $('.p20').text() || "";
                 }
                 description = description.trim();
+                tags = $("#keywords a").toArray()
+                    .map(function (el) { return el.textContent.trim() });
 
                 resolve({
                     url: url,
