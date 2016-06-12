@@ -33,6 +33,14 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+* 0.0.21
+    - Fixed SoFurry integration when logged out or browsing via HTTP.
+    - Added ability to save a text file with basic metadata about a submission adjacent to the file. The file currently contains things like Title, Author, Tags, Description and Source URL.
+    - Improved Furry Network support
+        - Raccoony will now track changes on the page and update its UI appropriately when switching between a submission view or a gallery view, or when paging between submissions.
+        - Auto-fullscreen is now disabled for FN as it interferes with the site's fullscreen viewer.
+        - There is still no Open All in Tabs support for FN in this release. FN's infinite scroll model makes it difficult to support this feature in a useful way, so it's possible Raccoony will never support it. 
+    - Improved reliability of the site-scraping plugins generally.
 * 0.0.20
 	- Fixed issue #18: open all in a private window would open everything in a new non-private window.
 * 0.0.19
