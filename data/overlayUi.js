@@ -48,6 +48,7 @@
                         `<button id="${n('open-prefs')}" class ="${n("action")}"><span>&#x2699; </span> Set up Raccoony</button>` +
                     `</div>` +
                     `<button id="${n("download")}" class="${n("action")}" title="Hotkey: D" style="display:none"><span>&#x25BC; </span> Download</button>` +
+                    `<button id="${n("download-exists")}" class="${n("action")}" disabled="disabled" style="display:none"><span>&#x2713;</span> File exists</button>` +
                     `<button id="${n("open-folder")}" class="${n("action")}" title="Hotkey: R" style="display:none"><span>&#x1f4c2; </span> Open folder</button>` +
                     `<button id="${n("fullscreen")}" class="${n("action")}" title="Hotkey: O" style="display:none"><span>&#x1F50E;</span> Fullscreen</button>` +
                     `<button id="${n("close-fullscreen")}" class="${n("action")}" title="Hotkey: O" style="display:none"><span>&#x2716;</span> Exit fullscreen</button>` +
@@ -69,32 +70,39 @@
 
     function updateUiToPageState() {
         // Adjust UI to match page state.
-        page.isDownloaded().then(function (isDownloaded) {
-            if (isDownloaded) {
-                onDownloadFinished();
-            }
-        });
         page.needDownloadSetup().then(function (needSetup) {
             if (needSetup) {
                 onNeedDownloadSetup();
             }
         });
-        page.hasSubmission().then(function (hasSubmission) {
-            if (hasSubmission) {
-                ui.main.removeClass(n('hide'));
-                el('download').show();
-                el('open-folder').show();
-                el('fullscreen').show();
-                el('dl').show();
-            }
-        });
+        
         page.hasSubmissionList().then(function (hasList) {
+            console.log("hasSubmissionList", hasList)
             if (hasList) {
                 ui.main.removeClass(n('hide'));
-                el('open-all').show();
-                el('tabs').show();
             }
-        })
+            el('open-all').toggle(hasList);
+            el('tabs').toggle(hasList);
+
+            page.hasSubmission().then(function (hasSubmission) {
+                console.log("hasSubmission", hasSubmission)
+                if (hasSubmission) {
+                    ui.main.removeClass(n('hide'));
+
+                    page.isDownloaded().then(function (isDownloaded) {
+                        toggleDownloadUi(isDownloaded);
+                    });
+                } else if (!hasList) {
+                    ui.main.addClass(n('hide'));
+                }
+                el('download').toggle(hasSubmission);
+                el('download-exists').toggle(hasSubmission);
+                el('open-folder').toggle(hasSubmission);
+                el('fullscreen').toggle(hasSubmission);
+                el('dl').toggle(hasSubmission);
+
+            });
+        });
     }
 
     function addPageEventHandlers() {
@@ -133,6 +141,10 @@
             el('fullscreen').toggle(!isFullscreen);
             el('close-fullscreen').toggle(isFullscreen);
         });
+
+        page.on(Page.Events.pageChanged, function () {
+            updateUiToPageState();
+        });
     }
 
     function onNeedDownloadSetup() {
@@ -151,12 +163,18 @@
     }
 
     function onDownloadFinished() {
-        el('download')
-            .html('<span>&#x2713;</span> File exists')
-            .prop('disabled', true);
-        el('dl')
-            .html('&#x2713;')
-            .addClass(n('exists'));
+        toggleDownloadUi(true);
+    }
+    
+    function toggleDownloadUi(isDownloaded) {
+        console.log("toggling download UI", isDownloaded);
+        el('download').toggle(!isDownloaded);
+        el('download-exists').toggle(isDownloaded);
+        if (isDownloaded) {
+            el('dl').html('&#x2713;').addClass(n('exists'));
+        } else {
+            el('dl').html('&#x25BC;').removeClass(n('exists'));
+        }
     }
 
     function hideProgressDelay() {

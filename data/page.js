@@ -1,5 +1,18 @@
 ﻿var Page = (function () {
     
+    var observeDOM = (function () {
+        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+        return function (obj, callback) {
+            // define a new observer
+            var obs = new MutationObserver(function (mutations, observer) {
+                if (mutations[0].addedNodes.length || mutations[0].removedNodes.length)
+                    callback();
+            });
+            // have the observer observe foo for changes in children
+            obs.observe(obj, { childList: true, subtree: true });
+        }
+    })();
+
     function Page(sitePlugin) {
         let _this = this;
         this.site = sitePlugin;
@@ -38,6 +51,29 @@
             _this._emit(Events.downloadError, [msg]);
         })
 
+        if (_this.site.reinitOnMutation)
+        {
+            // This site uses ajax to change its UI from one thing to another without loading new pages
+            // Fire an event whenever DOM mutations occur, so that we can reinit.
+            let lastLocation = window.location.href;
+            let currentTimeout = null;
+            observeDOM(document.querySelector(_this.site.mutationElementSelector), function () {
+                if (window.location.href != lastLocation || currentTimeout) {
+                    // Limiting to firing events that occur in conjunction with URL changes.
+                    // This assumes the site updates the URL when navigating to new "pages".
+                    lastLocation = window.location.href;
+                    _this.downloaded = null;
+                    if (currentTimeout) {
+                        // Try to wait for the DOM to settle down before we report the change event.
+                        clearTimeout(currentTimeout);
+                    }
+                    currentTimeout = setTimeout(function () {
+                        _this._emit(Events.pageChanged);
+                        currentTimeout = null;
+                    }, 200);
+                }
+            });
+        }
     }
 
     let Events = Page.Events = {
@@ -48,7 +84,8 @@
         downloadStart: 'downloadStart',
         downloadEnd: 'downloadEnd',
         downloadProgress: 'downloadProgress',
-        downloadError: 'downloadError'
+        downloadError: 'downloadError',
+        pageChanged: 'pageChanged'
     }
 
     Page.prototype = {
@@ -99,8 +136,8 @@
                     resolve(true);
                 } else {
                     _this.getSubmissionList().then(function (data) {
-                        let list = data.list;
-                        resolve(list && list.length > 0);
+                        let list = data && data.list;
+                        resolve(!!(list && list.length > 0));
                     }, reject);
                 }
             });
@@ -112,6 +149,7 @@
             let _this = this;
             return new Promise(function (resolve, reject) {
                 _this.getSubmissionMetadata().then(function (info) {
+                    console.log("hasSubmission metadata", info);
                     resolve(!!info);
                 }, reject);
             });

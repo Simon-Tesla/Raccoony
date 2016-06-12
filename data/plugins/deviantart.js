@@ -69,6 +69,13 @@
                     id = img.getAttribute("data-embed-id");
                 }
 
+                let title, description, tags;
+                var docTitle = document.title;
+                title = docTitle.substring(0, docTitle.lastIndexOf(" by "));
+                description = $(".dev-description").text() || "";
+                description = description.trim();
+                tags = []; //dA doesn't have tags.
+
                 resolve({
                     url: url,
                     previewUrl: previewUrl,
@@ -77,11 +84,14 @@
                     extension: ext,
                     type: fileTypes.getTypeByExt(ext),
                     submissionId: id,
-                    service: "deviantart"
+                    service: "deviantart",
+                    title: title,
+                    description: description,
+                    tags: tags
                 });
             } catch (e) {
-                console.warn("Could not get submission metadata", e);
-                reject(e);
+                //console.warn("Could not get submission metadata", e);
+                resolve(null);
             }
         });
     }
@@ -128,8 +138,8 @@
                     nosort: nosort
                 });
             } catch (e) {
-                console.warn("Could not get submission list", e);
-                reject(e);
+                //console.warn("Could not get submission list", e);
+                resolve(null);
             }
         });
     }
@@ -141,6 +151,9 @@
         // deviantArt makes extensive use of XHR in their site, so you can never guarantee that 
         // the DOM hasn't changed out from under you. Therefore, we disable any caching of responses.
         // TODO: investigate invalidating caches based on URL changes
-        nocache: true 
+        nocache: true,
+        reinitOnMutation: true,
+        mutationElementSelector: "body"
+
     };
 })();

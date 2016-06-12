@@ -53,7 +53,7 @@ pageMod.PageMod({
 });
 
 pageMod.PageMod({
-    include: "https://www.sofurry.com/*",
+    include: ["https://www.sofurry.com/*", "http://www.sofurry.com/*"],
     contentScriptFile: ["./plugins/sofurry.js"].concat(commonScript),
     contentStyleFile: commonCss,
     onAttach: onPageLoad,

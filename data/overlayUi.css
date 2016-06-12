@@ -12,6 +12,11 @@
     background-color: transparent;
 }
 
+#ry-ui, 
+#ry-ui * {
+    box-sizing: content-box;
+}
+
 #ry-ui .ry-hide, 
 #ry-ui.ry-hide {
     display: none;
