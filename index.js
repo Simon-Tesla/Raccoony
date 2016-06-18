@@ -22,8 +22,8 @@ var button = buttons.ActionButton({
     disabled: true
 });
 
-//TODO: hook this up somewhere.
 function openPreferencesPane() {
+    // TODO: see if we can expose preferences via panel UI instead
     let paneAddr = "addons://detail/%40raccoony/preferences";
     Services.wm.getMostRecentWindow('navigator:browser').BrowserOpenAddonsMgr(paneAddr);
 }
@@ -90,6 +90,14 @@ pageMod.PageMod({
     contentStyleFile: commonCss,
     onAttach: onPageLoad,
     contentScriptWhen: "end"
+});
+
+pageMod.PageMod({
+    include: "https://e621.net/*", 
+    contentScriptFile: ["./plugins/e621.js"].concat(commonScript),
+    contentStyleFile: commonCss,
+    onAttach: onPageLoad,
+    contentScriptWhen: "ready"
 });
 
 function onPageLoad(worker) {
