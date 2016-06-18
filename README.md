@@ -33,6 +33,8 @@ to see an example.
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+* 0.0.22
+    - Added support for e621. Note that since anyone can upload to e621, the artist is not always known. If Raccoony cannot determine an artist via the submission tags, it uses "unknown" as the artist's name.
 * 0.0.21
     - Fixed SoFurry integration when logged out or browsing via HTTP.
     - Added ability to save a text file with basic metadata about a submission adjacent to the file. The file currently contains things like Title, Author, Tags, Description and Source URL.
