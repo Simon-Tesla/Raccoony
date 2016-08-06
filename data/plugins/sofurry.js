@@ -103,6 +103,7 @@
 
     return {
         getSubmissionMetadata: getSubmissionMetadata,
-        getSubmissionList: getSubmissionList
+        getSubmissionList: getSubmissionList,
+        noAutoFullscreen: true, 
     };
 })();

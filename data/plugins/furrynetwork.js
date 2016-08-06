@@ -4,7 +4,7 @@
         return new Promise(function (resolve, reject) {
             try {
                 // Get the max preview button, if it exists
-                let button = document.querySelector(".submission-focus__actions a[target=_blank]");
+                let button = document.querySelector(".submission-actions a[target=_blank]");
                 let url = button.href;
 
                 // FN download URLs look like so:
@@ -19,7 +19,7 @@
                 let ext = dlFilename.substring(extIndex + 1);
 
                 // Get the preview URL
-                let previewImg = document.querySelector('.submission-focus__img img');
+                let previewImg = document.querySelector('.submission__image img');
                 let previewUrl = previewImg.src;
 
                 // Get the filename
@@ -54,7 +54,7 @@
                 });
             } catch (e) {
                 // swallow errors
-                console.warn("furrynetwork getSubmissionMetadata exception", e);
+                console.warn("furrynetwork getSubmissionMetadata exception", e.message, e.name, e.number, e.stack, e.description);
                 resolve(null);
             }
         });

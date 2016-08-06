@@ -153,7 +153,8 @@
         // TODO: investigate invalidating caches based on URL changes
         nocache: true,
         reinitOnMutation: true,
-        mutationElementSelector: "body"
+        mutationElementSelector: "body",
+        noAutoFullscreen: true,
 
     };
 })();

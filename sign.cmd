@@ -1,0 +1,1 @@
+jpm sign --api-key %AMO_USER% --api-secret %AMO_SECRET% --xpi .\dist\raccoony.xpi

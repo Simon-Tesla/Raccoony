@@ -1,7 +1,9 @@
 #Raccoony!
+
 A Firefox addon that adds shiny new features (like automatic downloading) to art sites. Inspired by the [FurAffinity Extender](https://andrewneo.github.io/faextender/) and [Inkbunny Downloader](http://www.humbird0.com/#/addons/inkbunny_downloader) Firefox addons.
 
 ##Features
+
  * Download any submission from a supported art site to your computer with a single click.
    Files are downloaded into folders organized like so: 
    `[service]/[username]/[id]_[filename]_by_[username].[ext]`
@@ -21,6 +23,7 @@ free to suggest more.
  * SoFurry
  * deviantArt
  * FurryNetwork (experimental/partial)
+ * e621
 
 The architecture of the addon makes it very easy to add support for more sites, 
 so if you see one not on the list, feel free to suggest or write your own plugin
@@ -28,11 +31,16 @@ for it. Just look at [one of the plugin js files](https://github.com/NatePri/Rac
 to see an example.
 
 ##Download
+
 **This is alpha-quality software.** There are bugs, and while it shouldn't harm your computer, use it at your own risk.
 
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
+
+* 0.0.23
+    - Fixed furrynetwork download support
+    - Disabled auto-fullscreen for sofurry (interferes with their fullscreen viewer) and deviantart (they already ensure the default preview fits the screen).
 * 0.0.22
     - Added support for e621. Note that since anyone can upload to e621, the artist is not always known. If Raccoony cannot determine an artist via the submission tags, it uses "unknown" as the artist's name.
 * 0.0.21
@@ -44,13 +52,13 @@ to see an example.
         - There is still no Open All in Tabs support for FN in this release. FN's infinite scroll model makes it difficult to support this feature in a useful way, so it's possible Raccoony will never support it. 
     - Improved reliability of the site-scraping plugins generally.
 * 0.0.20
-	- Fixed issue #18: open all in a private window would open everything in a new non-private window.
+    - Fixed issue #18: open all in a private window would open everything in a new non-private window.
 * 0.0.19
-	- Enabled the extension to work in private-browsing mode. Note that while this extension relies on no third-party services, 
-	  should not communicate with any third parties and should therefore be safe to use with private-browsing mode, 
-	  I have not done a complete audit of the libraries I use and I cannot guarantee privacy.
+    - Enabled the extension to work in private-browsing mode. Note that while this extension relies on no third-party services, 
+      should not communicate with any third parties and should therefore be safe to use with private-browsing mode, 
+      I have not done a complete audit of the libraries I use and I cannot guarantee privacy.
 * 0.0.17 & 0.0.18
-	- Updated to work with new InkBunny layout.
+    - Updated to work with new InkBunny layout.
 * 0.0.16
     - Raccoony is now signed to comply with the new extension signing requirements. 
 * 0.0.15
