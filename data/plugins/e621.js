@@ -58,7 +58,7 @@
                 let list = [];
 
                 // Don't try to iterate over stuff in the comments on posts.
-                $links = $("#content .tooltip-thumb").not("#comments *");
+                $links = $("#content .thumb a");
                 console.log("$links", $links, $links.length);
                 for (let ii = 0; ii < $links.length; ii++) {
                     console.log("entering loop", ii, $links[ii]);

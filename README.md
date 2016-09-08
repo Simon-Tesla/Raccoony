@@ -38,6 +38,8 @@ to see an example.
 
 ##Change Log
 
+* 0.0.24
+    - Fixed e621 open all in tabs support
 * 0.0.23
     - Fixed furrynetwork download support
     - Disabled auto-fullscreen for sofurry (interferes with their fullscreen viewer) and deviantart (they already ensure the default preview fits the screen).
