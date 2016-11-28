@@ -9,8 +9,8 @@
                 let button = document.querySelector(".actions a[href^='//d.facdn.net/art/']");
                 if (!button) {
                     // Must be in the Beta UI...
-                    button = document.querySelector(".button.submission a[href^='//d.facdn.net/art/']");
-                }
+                    button = document.querySelector('.sidebar-section a.button.download-logged-in');
+                } 
                 let url = button.href;
 
                 // FA download URLs look like so:
@@ -34,11 +34,16 @@
                     description = description[2].textContent;
                 } else {
                     // Might be the beta layout
-                    description = $('.p20').text() || "";
+                    description = $('.p20').text() || $('.submission-description').text();
                 }
                 description = description.trim();
-                tags = $("#keywords a").toArray()
-                    .map(function (el) { return el.textContent.trim() });
+
+                tags = $("#keywords a");
+                if (!tags || tags.length == 0) {
+                    $(".submission-sidebar .tags-row .tags a");
+                }
+
+                tags.toArray().map(function (el) { return el.textContent.trim() });
 
                 resolve({
                     url: url,
@@ -89,6 +94,9 @@
                 if (!$links.length) {
                     // Beta favorites
                     $links = $(".gallery b u s a");
+                }
+                if (!$links.length) {
+                    $links = $(".gallery figure b u a");
                 }
 
                 console.log("$links", $links, $links.length);

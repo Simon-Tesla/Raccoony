@@ -38,6 +38,8 @@ to see an example.
 
 ##Change Log
 
+* 0.0.25
+    - Fixed Fur Affinity support (both classic and beta layouts) to handle the recent thumbnails UI change.
 * 0.0.24
     - Fixed e621 open all in tabs support
 * 0.0.23
