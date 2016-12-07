@@ -38,6 +38,8 @@ to see an example.
 
 ##Change Log
 
+* 0.0.27
+    - Fixed metadata saving for Fur Affinity
 * 0.0.26
     - Minor CSS bugfix related to FA support
 * 0.0.25

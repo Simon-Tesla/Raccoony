@@ -40,10 +40,10 @@
 
                 tags = $("#keywords a");
                 if (!tags || tags.length == 0) {
-                    $(".submission-sidebar .tags-row .tags a");
+                    tags = $(".submission-sidebar .tags-row .tags a");
                 }
 
-                tags.toArray().map(function (el) { return el.textContent.trim() });
+                tags = tags.toArray().map(function (el) { return el.textContent.trim() });
 
                 resolve({
                     url: url,
