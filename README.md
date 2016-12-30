@@ -4,6 +4,8 @@ A Firefox addon that adds shiny new features (like automatic downloading) to art
 
 ##Features
 
+![Raccoony screenshot](https://github.com/NatePri/Raccoony/raw/master/resources/raccoony-features.png)
+
  * Download any submission from a supported art site to your computer with a single click.
    Files are downloaded into folders organized like so: 
    `[service]/[username]/[id]_[filename]_by_[username].[ext]`
