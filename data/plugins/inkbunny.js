@@ -28,7 +28,7 @@
                     // #magicbox doesn't exist.
                     image = document.querySelector(".magicboxParent .widget_imageFromSubmission img");
                 }
-                var previewUrl = image.src;
+                var previewUrl = (image && image.src) || null;
 
                 // Get the max preview button, if it exists
                 var button = document.querySelector("#size_container a[target=_blank]");

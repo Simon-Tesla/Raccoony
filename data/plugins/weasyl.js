@@ -33,7 +33,7 @@
                 filename = filename.substring(0, extIndex);
 
                 let previewImg = document.querySelector('#detail-art img');
-                let previewUrl = previewImg.src;
+                let previewUrl = (previewImg && previewImg.src) || null;
 
                 let title, description, tags;
                 title = document.getElementById("detail-title").textContent;

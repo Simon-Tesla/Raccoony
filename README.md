@@ -1,4 +1,4 @@
-#Raccoony!
+#Raccoony! ![Raccoony logo][logo]
 
 A Firefox addon that adds shiny new features (like automatic downloading) to art sites. Inspired by the [FurAffinity Extender](https://andrewneo.github.io/faextender/) and [Inkbunny Downloader](http://www.humbird0.com/#/addons/inkbunny_downloader) Firefox addons.
 
@@ -38,6 +38,9 @@ to see an example.
 
 ##Change Log
 
+* 0.0.28
+    - Replaced the old icon with one that I have distribution rights to. Icon was created by [ScruffKerfluff][logoauthor], and is used with permission. This icon is not MIT-licenced.
+    - Fixed issue with downloading non-images on Inkbunny.
 * 0.0.27
     - Fixed metadata saving for Fur Affinity
 * 0.0.26
@@ -124,9 +127,18 @@ to see an example.
     - Initial release.
 
 ##Licence
-The MIT License (MIT)
 
-Copyright (c) 2015 NatePri
+The Raccoony Logo ![Raccoony logo][logo] is **NOT** licenced under the MIT licence. It may be distributed unchanged with unmodified
+Raccoony source code or binary distributions. It **MAY NOT** be distributed under any other circumstances 
+or modified under any circumstances without permission from the artist. 
+
+The Raccoony Logo is &copy;[ScruffKerfluff][logoauthor].
+
+All other portions of this project are licensed under the MIT licence.
+
+###The MIT License (MIT)
+
+Copyright &copy; 2015 NatePri
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -145,3 +157,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+[logo]: https://github.com/NatePri/Raccoony/raw/master/data/icon-64.png
+[logoauthor]: https://www.furaffinity.net/user/scruffkerfluff/
