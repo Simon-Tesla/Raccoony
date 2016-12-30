@@ -162,4 +162,4 @@ THE SOFTWARE.
 
 
 [logo]: https://github.com/NatePri/Raccoony/raw/master/data/icon-64.png
-[logoauthor]: https://www.furaffinity.net/user/scruffkerfluff/
+[logoauthor]: https://twitter.com/ScruffKerfluff
