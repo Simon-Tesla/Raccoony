@@ -40,6 +40,8 @@ to see an example.
 
 ##Change Log
 
+* 0.0.29
+    - Fixed FurryNetwork download support
 * 0.0.28
     - Replaced the old icon with one that I have distribution rights to. Icon was created by [ScruffKerfluff][logoauthor], and is used with permission. This icon is not MIT-licenced.
     - Fixed issue with downloading non-images on Inkbunny.
