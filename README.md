@@ -26,6 +26,8 @@ free to suggest more.
  * deviantArt
  * FurryNetwork (experimental/partial)
  * e621
+ * Patreon (beta)
+ * HicceArs (beta)
 
 The architecture of the addon makes it very easy to add support for more sites, 
 so if you see one not on the list, feel free to suggest or write your own plugin
@@ -34,12 +36,12 @@ to see an example.
 
 ##Download
 
-**This is alpha-quality software.** There are bugs, and while it shouldn't harm your computer, use it at your own risk.
-
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
 ##Change Log
 
+* 0.0.30
+    - Added initial support for patreon and HicceArs.
 * 0.0.29
     - Fixed FurryNetwork download support
 * 0.0.28

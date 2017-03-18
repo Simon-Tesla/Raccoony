@@ -100,6 +100,23 @@ pageMod.PageMod({
     contentScriptWhen: "ready"
 });
 
+pageMod.PageMod({
+    include: "https://www.patreon.com/*", 
+    contentScriptFile: ["./plugins/patreon.js"].concat(commonScript),
+    contentStyleFile: commonCss,
+    onAttach: onPageLoad,
+    contentScriptWhen: "ready"
+});
+
+pageMod.PageMod({
+    include: ["https://hiccears.com/*", "http://hiccears.com/*"], 
+    contentScriptFile: ["./plugins/hiccears.js"].concat(commonScript),
+    contentStyleFile: commonCss,
+    onAttach: onPageLoad,
+    contentScriptWhen: "ready"
+});
+
+
 function onPageLoad(worker) {
     // PageMod handler
     console.log("Entering onPageLoad");
