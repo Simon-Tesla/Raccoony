@@ -4,8 +4,9 @@
         return new Promise(function (resolve, reject) {
             setTimeout(function () {
                 try {
-                    // Get the max preview button, if it exists
-                    let image = document.querySelector(".patreon-creation-shim--image");
+                    // Get the post image
+                    let image = document.querySelector(".patreon-creation-shim--image") ||
+                        document.querySelector("[data-test-tag=post-card] img");
                     let url = new URL(image.src);
 
                     // Patreon image URLs look like so:
@@ -22,13 +23,17 @@
                     let filename = slugParts.join('-');
 
                     // Get the username
-                    let userLink = document.querySelectorAll('.patreon-patreon-creation-shim--creator--top--text a')[0];
+                    let userLink = document.querySelectorAll('.patreon-patreon-creation-shim--creator--top--text a')[0] ||
+                        document.querySelector("[class$='CreatorCardContent--creatorName']");
                     let username = userLink.textContent;
 
                     let title, description, tags;
-                    title = $(".patreon-heading").text().trim();
-                    description = $(".patreon-creation-shim--text--body").text() || "";
-                    description = description.trim();
+                    title = document.querySelector(".patreon-heading") ||
+                        document.querySelector("[class$='Post--title']");
+                    title = title.textContent.trim();
+                    description = document.querySelector(".patreon-creation-shim--text--body") ||
+                        document.querySelector("[class$='Post--postContentWrapper text']");
+                    description = description.textContent.trim();
                     tags = [];
 
                     resolve({
@@ -58,20 +63,20 @@
             setTimeout(() => {
                 try {
                     console.log("getting patreon submission list");
-                    let itemLinks = document.querySelectorAll('div[data-test-tag=post-card] a._27t-components-PostHeader--timestampLink');
+                    let itemLinks = document.querySelectorAll('div[data-test-tag=post-card] a[class$="components-PostHeader--timestampLink"]');
                     let list = Array.from(itemLinks, (link) => {
                         return {
                             url: link.href,
                             id: link.href.split('-').pop(),
                         };
-                    });
+                    }).filter((item) => new URL(item.url).pathname.indexOf("/bePatron") !== 0);
                     console.log("patreon submission list length: " + list.length);
                     resolve({
                         list: list,
                         nosort: false
                     });
                 } catch (e) {
-                    console.warn("patreon getSubmissionLIst exception", e.message, e.name, e.number, e.stack, e.description);
+                    console.warn("patreon getSubmissionList exception", e.message, e.name, e.number, e.stack, e.description);
                     resolve(null);
                 }
             }, 500);

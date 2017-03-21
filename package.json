@@ -1,7 +1,7 @@
 {
   "title": "Raccoony",
   "name": "raccoony",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "Adds shiny new features (like automatic downloading) to art sites.",
   "main": "index.js",
   "author": "NatePri",

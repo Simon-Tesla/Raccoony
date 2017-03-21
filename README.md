@@ -40,8 +40,10 @@ to see an example.
 
 ##Change Log
 
+* 0.0.31
+    - Fixed some bugs with Patreon support.
 * 0.0.30
-    - Added initial support for patreon and HicceArs.
+    - Added initial support for Patreon and HicceArs.
 * 0.0.29
     - Fixed FurryNetwork download support
 * 0.0.28

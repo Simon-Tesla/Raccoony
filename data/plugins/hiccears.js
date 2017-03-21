@@ -4,7 +4,7 @@
         return new Promise(function (resolve, reject) {
             try {
                 // Get the download button
-                let button = document.querySelector('.panel-footer .pull-right .btn-default[href^="./download"]')
+                let button = document.querySelector('.panel-footer .pull-right .btn-default[href^="./download."]');
 
                 // Get the URL
                 // HicceArs download URLs are of the format 
