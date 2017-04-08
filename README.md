@@ -1,8 +1,8 @@
-#Raccoony! ![Raccoony logo][logo]
+# Raccoony! ![Raccoony logo][logo]
 
 A Firefox addon that adds shiny new features (like automatic downloading) to art sites. Inspired by the [FurAffinity Extender](https://andrewneo.github.io/faextender/) and [Inkbunny Downloader](http://www.humbird0.com/#/addons/inkbunny_downloader) Firefox addons.
 
-##Features
+## Features
 
 ![Raccoony screenshot](https://github.com/NatePri/Raccoony/raw/master/resources/raccoony-features.png)
 
@@ -17,7 +17,7 @@ A Firefox addon that adds shiny new features (like automatic downloading) to art
 Many more features are planned. Check the issue tracker for some of them and please feel
 free to suggest more.
 
-##Supported sites
+## Supported sites
 
  * Fur Affinity
  * InkBunny
@@ -34,11 +34,11 @@ so if you see one not on the list, feel free to suggest or write your own plugin
 for it. Just look at [one of the plugin js files](https://github.com/NatePri/Raccoony/blob/master/data/plugins/weasyl.js) 
 to see an example.
 
-##Download
+## Download
 
 [Download raccoony.xpi](https://github.com/NatePri/Raccoony/raw/master/dist/raccoony.xpi)
 
-##Change Log
+## Change Log
 
 * 0.0.31
     - Fixed some bugs with Patreon support.
@@ -134,7 +134,7 @@ to see an example.
 * 0.0.1
     - Initial release.
 
-##Licence
+## Licence
 
 The Raccoony Logo ![Raccoony logo][logo] is **NOT** licenced under the MIT licence. It may be distributed unchanged with unmodified
 Raccoony source code or binary distributions. It **MAY NOT** be distributed under any other circumstances 
@@ -144,7 +144,7 @@ The Raccoony Logo is &copy;[ScruffKerfluff][logoauthor].
 
 All other portions of this project are licensed under the MIT licence.
 
-###The MIT License (MIT)
+### The MIT License (MIT)
 
 Copyright &copy; 2015 NatePri
 
