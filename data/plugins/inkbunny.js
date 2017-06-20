@@ -68,6 +68,12 @@
                     .attr("content")
                     .split(', ');
 
+                if (!filename) {
+                    // Occasionally, IB will strip out everything that made up the original filename.
+                    // In this case, we'll use the title or ID instead.
+                    filename = title || id;
+                }
+
                 resolve({
                     url: url,
                     previewUrl: previewUrl,

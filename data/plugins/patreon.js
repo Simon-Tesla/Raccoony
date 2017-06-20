@@ -23,18 +23,18 @@
                     let filename = slugParts.join('-');
 
                     // Get the username
-                    let userLink = document.querySelectorAll('.patreon-patreon-creation-shim--creator--top--text a')[0] ||
-                        document.querySelector("[class$='CreatorCardContent--creatorName']");
-                    let username = userLink.textContent;
+                    let titleParts = document.title.split('|');
+                    let username = titleParts[1];
+                    let trimIdx = username.lastIndexOf(' on Patreon');
+                    username = username.substring(0, trimIdx).trim();
 
                     let title, description, tags;
-                    title = document.querySelector(".patreon-heading") ||
-                        document.querySelector("[class$='Post--title']");
-                    title = title.textContent.trim();
+                    title = titleParts[0].trim();
+
                     description = document.querySelector(".patreon-creation-shim--text--body") ||
                         document.querySelector("[class$='Post--postContentWrapper text']");
-                    description = description.textContent.trim();
-                    tags = [];
+                    description = description && description.textContent.trim();
+                    tags = Array.from(document.querySelectorAll("[class$='Post--postTags'] a")).map(elt => elt.textContent);
 
                     resolve({
                         url: url.href,

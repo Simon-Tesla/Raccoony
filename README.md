@@ -40,6 +40,9 @@ to see an example.
 
 ## Change Log
 
+* 0.0.32
+    - Fixed scraper bugs with Patreon support that cropped up after the redesign
+    - Fixed a minor bug with Inkbunny support where filenames would sometimes be reported as blank and Raccoony would be unable to save an image.
 * 0.0.31
     - Fixed some bugs with Patreon support.
 * 0.0.30
