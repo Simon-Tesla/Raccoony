@@ -36,7 +36,7 @@
                     // Might be the beta layout
                     description = $('.p20').text() || $('.submission-description').text();
                 }
-                description = description.trim();
+                description = description && description.trim();
 
                 tags = $("#keywords a");
                 if (!tags || tags.length == 0) {
@@ -60,6 +60,7 @@
                 });
             } catch (e) {
                 // Swallow any errors here.
+                console.error("error:", e.message, e.stack)
                 resolve(null);
             };
         });

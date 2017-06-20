@@ -40,6 +40,8 @@ to see an example.
 
 ## Change Log
 
+* 0.0.33
+    - Fixed null reference exception for FurAffinity plugin with submissions with no description.
 * 0.0.32
     - Fixed scraper bugs with Patreon support that cropped up after the redesign
     - Fixed a minor bug with Inkbunny support where filenames would sometimes be reported as blank and Raccoony would be unable to save an image.
