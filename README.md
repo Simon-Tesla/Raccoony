@@ -24,7 +24,7 @@ free to suggest more.
  * Weasyl
  * SoFurry
  * deviantArt
- * FurryNetwork (experimental/partial)
+ * FurryNetwork (partial)
  * e621
  * Patreon (beta)
  * HicceArs (beta)
@@ -40,6 +40,10 @@ to see an example.
 
 ## Change Log
 
+* 0.0.34
+    - Fixed: FA: Better filename and extension extraction
+    - Fixed: HA: Incorrect file downloaded under certain circumstances
+    - Fixed: HA: Standalone images (not part of a gallery) not recognized correctly
 * 0.0.33
     - Fixed null reference exception for FurAffinity plugin with submissions with no description.
 * 0.0.32
