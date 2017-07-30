@@ -4,17 +4,32 @@
         // FA is notoriously difficult to scrape, so we're punting and taking pretty much
         // all of the metadata from the (fortunately nicely formatted) download URL.
         return new Promise(function (resolve, reject) {
-            // Get the max preview button, if it exists
             try {
+                // Get the download button, if it exists
                 let button = document.querySelector(".actions a[href^='//d.facdn.net/art/']");
                 if (!button) {
                     // Must be in the Beta UI...
                     button = document.querySelector('.sidebar-section a.button.download-logged-in');
-                } 
+                }
                 let url = button.href;
 
+                let img = document.getElementById('submissionImg');
+                let previewUrl = img.getAttribute('data-preview-src');
+
+                if (!url) {
+                    // If all else fails, get the submission image source URL
+                    url = img.getAttribute('data-fullview-src') || img.src;
+                    if (url.indexOf('http:') !== 0 || url.indexOf('https:') !== 0) {
+                        // Add the protocol scheme to the URL if it's missing
+                        url = window.location.protocol + url;
+                    }
+                }
+
                 // FA download URLs look like so:
-                // http://d.facdn.net/art/[username]/[id]/[id].[username]_[origfilename].jpg	
+                // http://d.facdn.net/art/[username]/[id]/[id].[username]_[origfilename].[ext]	
+                // Preivew URLs look like so:
+                // //t.facdn.net/22795737@400-[id].[ext]
+
                 let urlParts = url.split("/");
                 let filename = urlParts.pop();
                 let id = urlParts.pop();
@@ -27,8 +42,20 @@
                 let ext = filename.substring(extIndex + 1);
                 filename = filename.substring(0, extIndex);
 
+                if (!ext) {
+                    // In rare cases, we don't even end up with an extension. 
+                    // We'll use the preview image extension and default to jpg if all else fails.
+                    ext = previewUrl.substr(previewUrl.lastIndexOf('.') + 1) || 'jpg';
+                }
+
                 let title, description, tags;
                 title = $("meta[property='og:title']").attr("content");
+
+                if (!filename) {
+                    // Sometimes the image doesn't end up with a filename; in this case we'll read a title from the metadata
+                    filename = title
+                }
+
                 description = document.querySelectorAll("#page-submission .maintable .alt1 .maintable .alt1");
                 if (description && description.length >= 3) {
                     description = description[2].textContent;
@@ -39,11 +66,11 @@
                 description = description && description.trim();
 
                 tags = $("#keywords a");
-                if (!tags || tags.length == 0) {
+                if (!tags || tags.length === 0) {
                     tags = $(".submission-sidebar .tags-row .tags a");
                 }
 
-                tags = tags.toArray().map(function (el) { return el.textContent.trim() });
+                tags = tags.toArray().map(function (el) { return el.textContent.trim(); });
 
                 resolve({
                     url: url,
@@ -60,9 +87,9 @@
                 });
             } catch (e) {
                 // Swallow any errors here.
-                console.error("error:", e.message, e.stack)
+                console.error("error:", e.message, e.stack);
                 resolve(null);
-            };
+            }
         });
     }
 
@@ -117,7 +144,7 @@
                     list.push({
                         url: href,
                         id: id
-                    })
+                    });
                 }
                 resolve({
                     list: list,
