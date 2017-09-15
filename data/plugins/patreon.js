@@ -19,8 +19,8 @@
                     // https://www.patreon.com/posts/[filename]-[id]
                     let pageUrlSlug = window.location.pathname.split('/').pop();
                     let slugParts = pageUrlSlug.split('-');
-                    let id = slugParts.pop();
-                    let filename = slugParts.join('-');
+                    let id = slugParts.length > 0 ? slugParts.pop() : pageUrlSlug;
+                    let filename = slugParts.length > 0 ? slugParts.join('-') : pageUrlSlug;
 
                     // Get the username
                     let titleParts = document.title.split('|');

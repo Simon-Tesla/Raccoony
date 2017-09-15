@@ -40,6 +40,9 @@ to see an example.
 
 ## Change Log
 
+* 0.0.35
+    - Fixed: IB: Handles new submission URL format correctly.
+    - Fixed: Patreon: Handled a case where the patreon URL doesn't contain the title in the URL slug for filename generation.
 * 0.0.34
     - Fixed: FA: Better filename and extension extraction
     - Fixed: HA: Incorrect file downloaded under certain circumstances

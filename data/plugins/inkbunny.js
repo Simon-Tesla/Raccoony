@@ -10,13 +10,17 @@
         return queryString;
     }
 
+    function isSubmissionPage() {
+        return window.location.href.indexOf("submissionview.php") !== -1 || window.location.pathname.indexOf('/s/') === 0;
+    }
+
     function getSubmissionMetadata() {
         // TODO: Use the InkBunny API if possible, as they don't provide good hooks for scraping.
         // TODO: Return title and extension as separate metadata items for all scrapers.
         return new Promise(function (resolve, reject) {
             try {
                 // Check to see if we're on a submission page.
-                if (window.location.href.indexOf("submissionview.php") === -1) {
+                if (!isSubmissionPage()) {
                     resolve(null);
                     return;
                 }
@@ -89,6 +93,7 @@
                 });
             } catch (e) {
                 // swallow errors
+                console.error("error:", e.message, e.stack);
                 resolve(null);
             }
         });
@@ -109,7 +114,7 @@
                     pageParams["random"] === "yes" ||
                     !!pageParams["orderby"];
 
-                if (window.location.href.indexOf("submissionview.php") !== -1) {
+                if (isSubmissionPage()) {
                     let $filesArea = $('#files_area');
                     if ($filesArea.length > 0) {
                         // Submissions only have submission lists if there is a files_area element somewhere,
@@ -149,6 +154,7 @@
                     nosort: nosort
                 });
             } catch (e) {
+                console.error("error:", e.message, e.stack);
                 resolve(null);
             }
         });
