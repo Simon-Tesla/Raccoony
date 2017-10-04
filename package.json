@@ -1,7 +1,7 @@
 {
   "title": "Raccoony",
   "name": "raccoony",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "Adds shiny new features (like automatic downloading) to art sites.",
   "main": "index.js",
   "author": "NatePri",
@@ -72,6 +72,12 @@
       "title": "Enable hotkeys",
       "type": "bool",
       "value": false
+    },
+    {
+      "name": "firstRunVersion",
+      "type": "string",
+      "title": "First run version",
+      "hidden":  true
     }
   ]
 }

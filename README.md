@@ -2,6 +2,25 @@
 
 A Firefox addon that adds shiny new features (like automatic downloading) to art sites. Inspired by the [FurAffinity Extender](https://andrewneo.github.io/faextender/) and [Inkbunny Downloader](http://www.humbird0.com/#/addons/inkbunny_downloader) Firefox addons.
 
+## IMPORTANT NOTICE
+Starting with **Firefox 57 (Quantum)**, Raccoony will **no longer run**, as it's based on the older Firefox Add-on API. I'm currently working on a new version of
+Raccoony based on the newer WebExtensions API, which hopefully means that I'll also be bringing Raccoony to Chrome as well.
+
+**For updates on the new extension, see the new [Raccoony website][website]**
+
+(I'm planning on changing my GitHub URL, so this address may stop working in the future.)
+
+### Will the new extension work in Chrome?
+Hopefully. There's no technical reason I can see that it wouldn't be able to.
+
+### Where is the WebExtension version? Can I beta test it?
+It's still under development. When it's closer to being ready, I'll announce it [here][website].
+
+### Will Raccoony update to the WebExtension version automatically?
+No. While it's technically possible to do this, I'm taking the opportunity to start fresh and rewrite most of the code from scratch, 
+and hopefully get the extension hosted on addons.mozilla.org. The old extension will open a notice on the [Raccoony website][website], 
+explaining how to get the new version when it comes out.
+
 ## Features
 
 ![Raccoony screenshot](https://github.com/NatePri/Raccoony/raw/master/resources/raccoony-features.png)
@@ -26,8 +45,9 @@ free to suggest more.
  * deviantArt
  * FurryNetwork (partial)
  * e621
- * Patreon (beta)
- * HicceArs (beta)
+ * Patreon (partial)
+ * HicceArs
+ * Eka's Portal - plugin contributed by Eupeptic
 
 The architecture of the addon makes it very easy to add support for more sites, 
 so if you see one not on the list, feel free to suggest or write your own plugin
@@ -40,6 +60,10 @@ to see an example.
 
 ## Change Log
 
+* 0.0.36
+    - Added support for Eka's Portal, thanks to a plugin contribution by Eupeptic.
+    - Added code to show the Raccoony website on first run.
+    - Added deprecation notice to the readme.
 * 0.0.35
     - Fixed: IB: Handles new submission URL format correctly.
     - Fixed: Patreon: Handled a case where the patreon URL doesn't contain the title in the URL slug for filename generation.
@@ -181,3 +205,4 @@ THE SOFTWARE.
 
 [logo]: https://github.com/NatePri/Raccoony/raw/master/data/icon-64.png
 [logoauthor]: https://twitter.com/ScruffKerfluff
+[website]: http://raccoony.thornvalley.com

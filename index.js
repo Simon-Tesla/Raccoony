@@ -10,6 +10,7 @@ var privateBrowsing = require("sdk/private-browsing");
 
 var openTabs = require("./lib/openTabs.js");
 var Downloader = require("./lib/downloader.js").Downloader;
+var { onStartup } = require("./lib/firstrun.js");
 
 var button = buttons.ActionButton({
     id: "raccoony-link",
@@ -27,6 +28,8 @@ function openPreferencesPane() {
     let paneAddr = "addons://detail/%40raccoony/preferences";
     Services.wm.getMostRecentWindow('navigator:browser').BrowserOpenAddonsMgr(paneAddr);
 }
+
+onStartup();
 
 /////////////////////////
 // Page Mod declarations
@@ -111,6 +114,14 @@ pageMod.PageMod({
 pageMod.PageMod({
     include: ["https://hiccears.com/*", "http://hiccears.com/*"], 
     contentScriptFile: ["./plugins/hiccears.js"].concat(commonScript),
+    contentStyleFile: commonCss,
+    onAttach: onPageLoad,
+    contentScriptWhen: "ready"
+});
+
+pageMod.PageMod({
+    include: ["https://aryion.com/*", "http://aryion.com/*"],
+    contentScriptFile: ["./plugins/ekas.js"].concat(commonScript),
     contentStyleFile: commonCss,
     onAttach: onPageLoad,
     contentScriptWhen: "ready"
