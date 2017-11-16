@@ -182,7 +182,7 @@ All other portions of this project are licensed under the MIT licence.
 
 ### The MIT License (MIT)
 
-Copyright &copy; 2015 NatePri
+Copyright &copy; 2015 Simon Tesla
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
