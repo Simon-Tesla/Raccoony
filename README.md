@@ -3,24 +3,9 @@
 A Firefox addon that adds shiny new features (like automatic downloading) to art sites. Inspired by the [FurAffinity Extender](https://andrewneo.github.io/faextender/) and [Inkbunny Downloader](http://www.humbird0.com/#/addons/inkbunny_downloader) Firefox addons.
 
 ## IMPORTANT NOTICE
-Starting with **Firefox 57 (Quantum)**, Raccoony will **no longer run**, as it's based on the older Firefox Add-on API. I'm currently working on a new version of
-Raccoony based on the newer WebExtensions API, which hopefully means that I'll also be bringing Raccoony to Chrome as well.
+Starting with **Firefox 57 (Quantum)**, Raccoony will **no longer run**, as it's based on the older, unsupported Firefox Add-on API. As a result of this, the Firefox Addon version of Raccoony **is no longer maintained**, and will not receive updates.
 
-**For updates on the new extension, see the new [Raccoony website][website]**
-
-### Will the old extension receive updates?
-No. If you want the maintained version of Raccoony, you'll need to upgrade to the [WebExtension version](https://github.com/Simon-Tesla/RaccoonyWebEx). This is a spare time project for me, and I have no interest in maintaining something I won't be using myself.
-
-### Will the new extension work in Chrome?
-Hopefully. There's no technical reason I can see that it wouldn't be able to.
-
-### Where is the WebExtension version? Can I beta test it?
-It's still under development. When it's closer to being ready, I'll announce it [here][website].
-
-### Will Raccoony update to the WebExtension version automatically?
-No. While it's technically possible to do this, I'm taking the opportunity to start fresh and rewrite most of the code from scratch, 
-and hopefully get the extension hosted on addons.mozilla.org. The old extension will open a notice on the [Raccoony website][website], 
-explaining how to get the new version when it comes out.
+**Please upgrade to the [WebExtension version](https://github.com/Simon-Tesla/RaccoonyWebEx) for the latest maintained version of Raccoony.**
 
 ## Features
 
