@@ -8,7 +8,8 @@ Raccoony based on the newer WebExtensions API, which hopefully means that I'll a
 
 **For updates on the new extension, see the new [Raccoony website][website]**
 
-(I'm planning on changing my GitHub URL, so this address may stop working in the future.)
+### Will the old extension receive updates?
+No. If you want the maintained version of Raccoony, you'll need to upgrade to the [WebExtension version](https://github.com/Simon-Tesla/RaccoonyWebEx). This is a spare time project for me, and I have no interest in maintaining something I won't be using myself.
 
 ### Will the new extension work in Chrome?
 Hopefully. There's no technical reason I can see that it wouldn't be able to.
